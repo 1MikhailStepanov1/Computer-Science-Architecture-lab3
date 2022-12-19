@@ -9,6 +9,9 @@ class Opcode(str, Enum):
     PRINT = 'print'
     JUMP = 'jmp'
     JLE = 'jle' # jump if less or equals
+    JL = 'jl' # jump if less
+    JGE = 'jge' # jump if greater or equals
+    JG = 'jg' # jump if greater
     JNE = 'jne' # jump if not equals
     JE = 'je' # jump if equals
     DIV = 'div'

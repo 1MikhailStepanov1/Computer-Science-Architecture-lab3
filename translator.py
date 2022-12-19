@@ -6,6 +6,9 @@ type2opcode = {
     'input': Opcode.INPUT,
     'print': Opcode.PRINT,
     '>': Opcode.JLE,
+    '>=': Opcode.JL,
+    '<': Opcode.JGE,
+    '<=': Opcode.JG,
     '==': Opcode.JE,
     '%': Opcode.DIV,
     'AssignmentExpression': Opcode.ASSIGN,
@@ -27,12 +30,26 @@ def translate(filename):
     code = parse(filename)
     resCode = []
     for i in code.body:
-        print(i)
+        match i.type:
+            case "VariableDeclaration":
+                resCode.append({'opcode': Opcode.ALLOC, 'arg1': i.declarations[0].init.value})
+            case "WhileStatement":
+                translateWhileCycle(resCode, i.test, i.body)
+            case _:
+                break
+        print(resCode)
         print("-----------------------------------")
-
 
     resCode.append({'opcode': Opcode.HALT})
     return resCode
+
+
+# TODO Обращение к памяти, где лежат переменные
+# TODO Количество шагов куда прыгать. Возможно не понадобится
+def translateWhileCycle(resCode, condition, body):
+    resCode.append({'opcode': type2opcode[condition.operator], 'arg1': condition.left.name, 'arg2': condition.right.value, 'arg3': 12})
+
+
 
 
 def main():
