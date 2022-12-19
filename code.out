@@ -1,0 +1,198 @@
+{
+    type: "Program",
+    sourceType: "script",
+    body: [
+        {
+            type: "VariableDeclaration",
+            declarations: [
+                {
+                    type: "VariableDeclarator",
+                    id: {
+                        type: "Identifier",
+                        name: "n"
+                    },
+                    init: {
+                        type: "Literal",
+                        value: 20,
+                        raw: "20"
+                    }
+                }
+            ],
+            kind: "let"
+        },
+        {
+            type: "VariableDeclaration",
+            declarations: [
+                {
+                    type: "VariableDeclarator",
+                    id: {
+                        type: "Identifier",
+                        name: "i"
+                    },
+                    init: {
+                        type: "Literal",
+                        value: 19,
+                        raw: "19"
+                    }
+                }
+            ],
+            kind: "let"
+        },
+        {
+            type: "WhileStatement",
+            test: {
+                type: "BinaryExpression",
+                operator: ">",
+                left: {
+                    type: "Identifier",
+                    name: "i"
+                },
+                right: {
+                    type: "Literal",
+                    value: 0,
+                    raw: "0"
+                }
+            },
+            body: {
+                type: "BlockStatement",
+                body: [
+                    {
+                        type: "IfStatement",
+                        test: {
+                            type: "BinaryExpression",
+                            operator: "==",
+                            left: {
+                                type: "BinaryExpression",
+                                operator: "%",
+                                left: {
+                                    type: "Identifier",
+                                    name: "n"
+                                },
+                                right: {
+                                    type: "Identifier",
+                                    name: "i"
+                                }
+                            },
+                            right: {
+                                type: "Literal",
+                                value: 0,
+                                raw: "0"
+                            }
+                        },
+                        consequent: {
+                            type: "BlockStatement",
+                            body: [
+                                {
+                                    type: "ExpressionStatement",
+                                    expression: {
+                                        type: "AssignmentExpression",
+                                        operator: "=",
+                                        left: {
+                                            type: "Identifier",
+                                            name: "i"
+                                        },
+                                        right: {
+                                            type: "BinaryExpression",
+                                            operator: "-",
+                                            left: {
+                                                type: "Identifier",
+                                                name: "i"
+                                            },
+                                            right: {
+                                                type: "Literal",
+                                                value: 1,
+                                                raw: "1"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        alternate: {
+                            type: "BlockStatement",
+                            body: [
+                                {
+                                    type: "ExpressionStatement",
+                                    expression: {
+                                        type: "AssignmentExpression",
+                                        operator: "=",
+                                        left: {
+                                            type: "Identifier",
+                                            name: "n"
+                                        },
+                                        right: {
+                                            type: "BinaryExpression",
+                                            operator: "+",
+                                            left: {
+                                                type: "Identifier",
+                                                name: "n"
+                                            },
+                                            right: {
+                                                type: "Literal",
+                                                value: 20,
+                                                raw: "20"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    type: "ExpressionStatement",
+                                    expression: {
+                                        type: "AssignmentExpression",
+                                        operator: "=",
+                                        left: {
+                                            type: "Identifier",
+                                            name: "i"
+                                        },
+                                        right: {
+                                            type: "Literal",
+                                            value: 19,
+                                            raw: "19"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        type: "IfStatement",
+                        test: {
+                            type: "BinaryExpression",
+                            operator: "==",
+                            left: {
+                                type: "Identifier",
+                                name: "i"
+                            },
+                            right: {
+                                type: "Literal",
+                                value: 1,
+                                raw: "1"
+                            }
+                        },
+                        consequent: {
+                            type: "BlockStatement",
+                            body: [
+                                {
+                                    type: "ExpressionStatement",
+                                    expression: {
+                                        type: "CallExpression",
+                                        callee: {
+                                            type: "Identifier",
+                                            name: "print"
+                                        },
+                                        arguments: [
+                                            {
+                                                type: "Identifier",
+                                                name: "n"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

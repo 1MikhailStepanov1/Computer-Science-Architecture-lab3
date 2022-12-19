@@ -1,0 +1,6 @@
+let temp = input();
+while (temp != EOF)
+{
+    print(temp);
+    temp = input();
+}
