@@ -1,1 +1,2 @@
-print("hello, world");
+let temp = "hello, world";
+print(temp);
