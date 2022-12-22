@@ -16,10 +16,15 @@ type2opcode = {
     'assign': Opcode.ASSIGN,
     '-': Opcode.SUB,
     '+': Opcode.ADD,
-    '!=': Opcode.JNE
+    '!=': Opcode.JNE,
+    '/': Opcode.DIV,
+    '*': Opcode.MUL,
+    'inc': Opcode.INC,
+    'dec': Opcode.DEC
 }
 
 condition_signs = {">", ">=", "<", "<=", "==", "!="}
+simple_operations = {"*", "/", "%", "+", "-"}
 
 regex_patterns = {
     "alloc": 'let[\s]+[a-zA-z]+[\s]+=[\s]+([0-9]+|(\"|\').*(\"|\'));',
@@ -122,6 +127,10 @@ def parse_condition(row, parsed_type):
             index = i
             left = row[:i]
             right = row[i + 1:]
+    if len(left) > 1:
+        left = parse_extra_action(left)
+    elif len(right) > 1:
+        right = parse_extra_action(right)
     result = {
         'opcode': type2opcode.get(row[index]).value,
         'condition': {
@@ -130,6 +139,42 @@ def parse_condition(row, parsed_type):
             'jmp_arg': 0
         }
     }
+    return result
+
+
+def parse_extra_action(part_to_parse):
+    result = {}
+    if part_to_parse[1] in simple_operations and part_to_parse[2] != '1':
+        result = {
+            'opcode': type2opcode.get(part_to_parse[1]),
+            'body': {
+                'left': part_to_parse[0],
+                'right': part_to_parse[2]
+            }
+        }
+    else:
+        if part_to_parse[1] == '+':
+            result = {
+                'opcode': type2opcode.get('inc'),
+                'body': {
+                    'name': part_to_parse[0]
+                }
+            }
+        elif part_to_parse[1] == '-':
+            result = {
+                'opcode': type2opcode.get('dec'),
+                'body': {
+                    'name': part_to_parse[0]
+                }
+            }
+        else:
+            result = {
+                'opcode': type2opcode.get(part_to_parse[1]),
+                'body': {
+                    'left': part_to_parse[0],
+                    'right': part_to_parse[2]
+                }
+            }
     return result
 
 

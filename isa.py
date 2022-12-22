@@ -17,6 +17,7 @@ class Opcode(str, Enum):
     DIV = 'div'
     ADD = 'add'
     SUB = 'sub'
+    MUL = 'mul'
     INC = 'inc'
     DEC = 'dec'
     ASSIGN = 'assign'
