@@ -1,98 +1,14 @@
-[
-    {
-        "opcode": "alloc",
-        "body": {
-            "name": "n",
-            "value": 20
-        }
-    },
-    {
-        "opcode": "alloc",
-        "body": {
-            "name": "i",
-            "value": 19
-        }
-    },
-    {
-        "opcode": "jle",
-        "condition": {
-            "left": [
-                "i"
-            ],
-            "right": [
-                "0"
-            ],
-            "jmp_arg": 0
-        }
-    },
-    {
-        "opcode": "je",
-        "condition": {
-            "left": {
-                "opcode": "div",
-                "body": {
-                    "left": "n",
-                    "right": "i"
-                }
-            },
-            "right": [
-                "0"
-            ],
-            "jmp_arg": 0
-        }
-    },
-    {
-        "opcode": "assign",
-        "body": {
-            "left": "i",
-            "right": {
-                "opcode": "dec",
-                "body": {
-                    "name": "i"
-                }
-            }
-        }
-    },
-    {
-        "opcode": "alternative"
-    },
-    {
-        "opcode": "assign",
-        "body": {
-            "left": "n",
-            "right": {
-                "opcode": "add",
-                "body": {
-                    "left": "n",
-                    "right": "20"
-                }
-            }
-        }
-    },
-    {
-        "opcode": "assign",
-        "body": {
-            "left": "i",
-            "right": "19"
-        }
-    },
-    {
-        "opcode": "je",
-        "condition": {
-            "left": [
-                "i"
-            ],
-            "right": [
-                "1"
-            ],
-            "jmp_arg": 0
-        }
-    },
-    {
-        "opcode": "print",
-        "variable": "n"
-    },
-    {
-        "opcode": "halt"
-    }
-]
+{'opcode': 'alloc', 'body': {'name': 'n', 'value': 20}}
+{'opcode': 'alloc', 'body': {'name': 'i', 'value': 19}}
+{'opcode': 'jle', 'condition': {'left': ['i'], 'right': ['0']}, 'jmp_arg': 11}
+{'opcode': 'div', 'body': {'left': 'n', 'right': 'i'}}
+{'opcode': 'jne', 'condition': {'left': 'result1', 'right': ['0']}, 'jmp_arg': 3}
+{'opcode': 'dec', 'body': {'name': 'i'}}
+{'opcode': 'assign', 'body': {'left': 'i', 'right': 'result'}}
+{'opcode': 'jmp', 'jmp_arg': 4}
+{'opcode': 'add', 'body': {'left': 'n', 'right': '20'}}
+{'opcode': 'assign', 'body': {'left': 'n', 'right': 'result'}}
+{'opcode': 'assign', 'body': {'left': 'i', 'right': '19'}}
+{'opcode': 'jne', 'condition': {'left': ['i'], 'right': ['1']}, 'jmp_arg': 2}
+{'opcode': 'print', 'variable': 'n'}
+{'opcode': 'halt'}

@@ -7,13 +7,13 @@ div n, i        |       n % i -> % - rdx, / - rax
 jne rdx, 0, 4   |       rdx == 0
 dec i, rdx      |       i - 1 -> rdx
 assign rdx, i   |       i = i - 1;
-jmp rip, 4      |
+jmp 4           |
 add n, 20, rdx  |       n + 20 -> rdx
 assign rdx, n   |       rdx -> n
 assign 19, i    |       19 -> i
-je i, 1, 2      |       i == 1
+jne i, 1, 2     |       i == 1
 print n         |       n -> print
-jmp rip, -11    |
+jmp -11         |
 halt
 
 

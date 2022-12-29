@@ -7,16 +7,17 @@ type2opcode = {
     'alloc': Opcode.ALLOC,
     'input': Opcode.INPUT,
     'print': Opcode.PRINT,
+    'jump': Opcode.JUMP,
     '>': Opcode.JLE,
     '>=': Opcode.JL,
     '<': Opcode.JGE,
     '<=': Opcode.JG,
-    '==': Opcode.JE,
+    '==': Opcode.JNE,
     '%': Opcode.DIV,
     'assign': Opcode.ASSIGN,
     '-': Opcode.SUB,
     '+': Opcode.ADD,
-    '!=': Opcode.JNE,
+    '!=': Opcode.JE,
     '/': Opcode.DIV,
     '*': Opcode.MUL,
     'inc': Opcode.INC,
@@ -27,22 +28,26 @@ condition_signs = {">", ">=", "<", "<=", "==", "!="}
 simple_operations = {"*", "/", "%", "+", "-"}
 
 regex_patterns = {
-    "alloc": 'let[\s]+[a-zA-z]+[\s]+=[\s]+([0-9]+|(\"|\').*(\"|\'));',
-    "simpleWhileStatement": "while[\s]*\([a-zA-z]+[\s]*(>|>=|<|<=|!=|==)[\s]*([0-9]+|[a-zA-Z]+)\)",
-    "simpleIfStatement": "if[\s]*\([a-zA-z]+[\s]*(>|>=|<|<=|!=|==)[\s]*([0-9]+|[a-zA-Z]+)\)",
-    "whileWithExtraActions": 'while[\s]*\(([a-zA-z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)',
-    "ifWithExtraActions": 'if[\s]*\(([a-zA-z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)',
+    "alloc": r"let[\s]+[a-zA-z]+[\s]+=[\s]+([0-9]+|(\"|\').*(\"|\'));",
+    "simpleWhileStatement": r"while[\s]*\([a-zA-z]+[\s]*(>|>=|<|<=|!=|==)[\s]*([0-9]+|[a-zA-Z]+)\)",
+    "simpleIfStatement": r"if[\s]*\([a-zA-z]+[\s]*(>|>=|<|<=|!=|==)[\s]*([0-9]+|[a-zA-Z]+)\)",
+    "whileWithExtraActions": r"while[\s]*\(([a-zA-z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
+    "ifWithExtraActions": r"if[\s]*\(([a-zA-z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\\|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
     "assign": r"[a-zA-Z]+[\s]+=[\s]+((([a-zA-Z]+|[0-9]+)[\s]+(\%|\\|\+|\-|\*)[\s]*([a-zA-Z]+|[0-9]+))|[0-9]+|[a-zA-Z]+);",
-    "alternative": 'else',
-    "input": 'input\([a-zA-Z]+\);',
-    "print": 'print\([a-zA-Z]+\);'
+    "alternative": r"else",
+    "input": r"input\([a-zA-Z]+\);",
+    "print": r"print\([a-zA-Z]+\);"
 }
 
 # TODO Переделать на нормальное if условие
 banned_symbols = {'{', '}'}
 
 res_code = []
+jmp_stack = []
 
+def inc_stack():
+    for x in range(0, len(jmp_stack)):
+        jmp_stack[x]['value'] = jmp_stack[x]['value'] + 1
 
 def parse(filename):
     with open(filename, encoding="utf-8") as file:
@@ -54,7 +59,6 @@ def parse(filename):
 
 def translate(filename):
     code = parse(filename)
-    jmp_stack = []
     for i in code:
         if re.fullmatch(regex_patterns.get("alloc"), i) is not None:
             res_code.append({'opcode': type2opcode.get('alloc').value, 'body': parse_alloc_instr(i)})
@@ -84,29 +88,30 @@ def translate(filename):
             res_code.append({'opcode': type2opcode.get('print').value, 'variable': name_of_variable})
 
         elif re.fullmatch(regex_patterns.get('alternative'), i) is not None:
-            res_code.append({'opcode': 'alternative'})
+            res_code.append({'opcode': type2opcode.get('jump').value, "jmp_arg": 0})
 
         elif i == '{':
-            jmp_stack.append(1)
+            jmp_stack.append({'opcode_index': len(res_code)-1, 'value': 1})
             # res_code.append({'opcode': '{'})
 
         elif i == '}':
             jmp_arg = jmp_stack.pop()
-            # res_code.append({'opcode': '}'})
+            res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value']
 
         if i not in banned_symbols:
-            for x in range(0, len(jmp_stack)):
-                jmp_stack[x] = jmp_stack[x] + 1
+            inc_stack()
 
+        print(res_code[len(res_code) - 1])
         print(jmp_stack)
         # print('-----------------------------------')
-        print(i)
-        print(res_code[len(res_code) - 1])
+        #print(i)
         print('-----------------------------------')
 
     res_code.append({'opcode': Opcode.HALT.value})
     return res_code
 
+# def set_jmp_arg():
+#
 
 def parse_alloc_instr(row):
     row = row.split(' ')
@@ -132,16 +137,18 @@ def parse_condition(row, parsed_type):
             left = row[:i]
             right = row[i + 1:]
     if len(left) > 1:
-        left = parse_extra_action(left)
+        parse_extra_action(left)
+        left = 'result1'
     elif len(right) > 1:
-        right = parse_extra_action(right)
+        parse_extra_action(right)
+        right = 'result2'
     result = {
         'opcode': type2opcode.get(row[index]).value,
         'condition': {
             'left': left,
-            'right': right,
-            'jmp_arg': 0
-        }
+            'right': right
+        },
+        'jmp_arg': 0
     }
     return result
 
@@ -156,6 +163,11 @@ def parse_extra_action(part_to_parse):
                 'right': part_to_parse[2]
             }
         }
+        res_code.append(result)
+        print(res_code[len(res_code) - 1])
+        inc_stack()
+        print(jmp_stack)
+        print('-----------------------------------')
     else:
         if part_to_parse[1] == '+':
             result = {
@@ -164,6 +176,11 @@ def parse_extra_action(part_to_parse):
                     'name': part_to_parse[0]
                 }
             }
+            res_code.append(result)
+            print(res_code[len(res_code) - 1])
+            inc_stack()
+            print(jmp_stack)
+            print('-----------------------------------')
         elif part_to_parse[1] == '-':
             result = {
                 'opcode': type2opcode.get('dec').value,
@@ -171,6 +188,11 @@ def parse_extra_action(part_to_parse):
                     'name': part_to_parse[0]
                 }
             }
+            res_code.append(result)
+            print(res_code[len(res_code) - 1])
+            inc_stack()
+            print(jmp_stack)
+            print('-----------------------------------')
         else:
             result = {
                 'opcode': type2opcode.get(part_to_parse[1]).value,
@@ -179,6 +201,11 @@ def parse_extra_action(part_to_parse):
                     'right': part_to_parse[2]
                 }
             }
+            res_code.append(result)
+            print(res_code[len(res_code) - 1])
+            inc_stack()
+            print(jmp_stack)
+            print('-----------------------------------')
     return result
 
 
@@ -191,9 +218,10 @@ def parse_assign_condition(row):
             'right': row[2]
         }
     else:
+        parse_extra_action(row[2:])
         result = {
             'left': row[0],
-            'right': parse_extra_action(row[2:])
+            'right': 'result'
         }
 
     return result

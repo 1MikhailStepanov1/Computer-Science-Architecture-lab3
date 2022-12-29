@@ -30,7 +30,9 @@ class Term(namedtuple('Term', 'name arg1 arg2')):
 
 def write_code(filename, code):
     with open(filename, "w", encoding='utf-8') as file:
-        file.write(json.dumps(code, indent=4))
+        for i in code:
+            file.write(str(i) + '\n')
+        # file.write(json.dumps(code, indent=4))
 
 
 def read_code(filename):
