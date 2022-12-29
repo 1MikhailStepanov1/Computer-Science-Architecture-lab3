@@ -44,10 +44,13 @@ banned_symbols = {'{', '}'}
 
 res_code = []
 jmp_stack = []
+last_op = ''
+
 
 def inc_stack():
     for x in range(0, len(jmp_stack)):
         jmp_stack[x]['value'] = jmp_stack[x]['value'] + 1
+
 
 def parse(filename):
     with open(filename, encoding="utf-8") as file:
@@ -59,59 +62,70 @@ def parse(filename):
 
 def translate(filename):
     code = parse(filename)
-    for i in code:
-        if re.fullmatch(regex_patterns.get("alloc"), i) is not None:
-            res_code.append({'opcode': type2opcode.get('alloc').value, 'body': parse_alloc_instr(i)})
+    i = 0
+    for i in range(i, len(code)):
+        if re.fullmatch(regex_patterns.get("alloc"), code[i]) is not None:
+            last_operation = 'alloc'
+            res_code.append({'opcode': type2opcode.get(last_operation).value, 'body': parse_alloc_instr(code[i])})
 
-        elif re.fullmatch(regex_patterns.get("whileWithExtraActions"), i) is not None:
-            if re.fullmatch(regex_patterns.get("simpleWhileStatement"), i) is not None:
-                res_code.append(parse_condition(i, 'while'))
+        elif re.fullmatch(regex_patterns.get("whileWithExtraActions"), code[i]) is not None:
+            last_operation = 'while'
+            if re.fullmatch(regex_patterns.get("simpleWhileStatement"), code[i]) is not None:
+                res_code.append(parse_condition(code[i], last_operation))
             else:
-                res_code.append(parse_condition(i, 'while'))
+                res_code.append(parse_condition(code[i], last_operation))
 
-        elif re.fullmatch(regex_patterns.get("ifWithExtraActions"), i) is not None:
-            if re.fullmatch(regex_patterns.get("simpleIfStatement"), i) is not None:
-                res_code.append(parse_condition(i, 'if'))
+        elif re.fullmatch(regex_patterns.get("ifWithExtraActions"), code[i]) is not None:
+            last_operation = 'if'
+            if re.fullmatch(regex_patterns.get("simpleIfStatement"), code[i]) is not None:
+                res_code.append(parse_condition(code[i], last_operation))
             else:
-                res_code.append(parse_condition(i, 'if'))
+                res_code.append(parse_condition(code[i], last_operation))
 
-        elif re.fullmatch(regex_patterns.get("assign"), i) is not None:
+        elif re.fullmatch(regex_patterns.get("assign"), code[i]) is not None:
+            last_operation = 'assign'
+            res_code.append({'opcode': type2opcode.get(last_operation).value, 'body': parse_assign_condition(code[i])})
 
-            res_code.append({'opcode': type2opcode.get('assign').value, 'body': parse_assign_condition(i)})
+        elif re.fullmatch(regex_patterns.get("input"), code[i]) is not None:
+            last_operation = 'input'
+            name_of_variable = code[i].replace('input', '').replace('(', '').replace(')', '').replace(';', '')
+            res_code.append({'opcode': type2opcode.get(last_operation).value, 'variable': name_of_variable})
 
-        elif re.fullmatch(regex_patterns.get("input"), i) is not None:
-            name_of_variable = i.replace('input', '').replace('(', '').replace(')', '').replace(';', '')
-            res_code.append({'opcode': type2opcode.get('input').value, 'variable': name_of_variable})
+        elif re.fullmatch(regex_patterns.get("print"), code[i]) is not None:
+            last_operation = 'print'
+            name_of_variable = code[i].replace('print', '').replace('(', '').replace(')', '').replace(';', '')
+            res_code.append({'opcode': type2opcode.get(last_operation).value, 'variable': name_of_variable})
 
-        elif re.fullmatch(regex_patterns.get("print"), i) is not None:
-            name_of_variable = i.replace('print', '').replace('(', '').replace(')', '').replace(';', '')
-            res_code.append({'opcode': type2opcode.get('print').value, 'variable': name_of_variable})
-
-        elif re.fullmatch(regex_patterns.get('alternative'), i) is not None:
+        elif re.fullmatch(regex_patterns.get('alternative'), code[i]) is not None:
+            last_operation = 'else'
             res_code.append({'opcode': type2opcode.get('jump').value, "jmp_arg": 0})
 
-        elif i == '{':
-            jmp_stack.append({'opcode_index': len(res_code)-1, 'value': 1})
-            # res_code.append({'opcode': '{'})
+        elif code[i] == '{':
+            if last_operation == 'if':
+                jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'if', 'value': 1})
+            elif last_operation == 'while':
+                jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'while', 'value': 1})
+            elif last_operation == 'else':
+                jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'else', 'value': 1})
 
-        elif i == '}':
+        elif code[i] == '}':
             jmp_arg = jmp_stack.pop()
+            if jmp_arg['type'] == 'while':
+                res_code.append({
+                    'opcode': type2opcode.get('jump').value,
+                    "jmp_arg": -1 * jmp_arg['value']
+                })
+                res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value'] + 1
+                continue
+            elif jmp_arg['type'] == 'if' and re.fullmatch(regex_patterns.get('alternative'), code[i+1]) is not None:
+                res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value'] + 1
+                continue
             res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value']
 
-        if i not in banned_symbols:
+        if code[i] not in banned_symbols:
             inc_stack()
-
-        print(res_code[len(res_code) - 1])
-        print(jmp_stack)
-        # print('-----------------------------------')
-        #print(i)
-        print('-----------------------------------')
-
     res_code.append({'opcode': Opcode.HALT.value})
     return res_code
-
-# def set_jmp_arg():
-#
 
 def parse_alloc_instr(row):
     row = row.split(' ')
@@ -164,10 +178,7 @@ def parse_extra_action(part_to_parse):
             }
         }
         res_code.append(result)
-        print(res_code[len(res_code) - 1])
         inc_stack()
-        print(jmp_stack)
-        print('-----------------------------------')
     else:
         if part_to_parse[1] == '+':
             result = {
@@ -177,10 +188,7 @@ def parse_extra_action(part_to_parse):
                 }
             }
             res_code.append(result)
-            print(res_code[len(res_code) - 1])
             inc_stack()
-            print(jmp_stack)
-            print('-----------------------------------')
         elif part_to_parse[1] == '-':
             result = {
                 'opcode': type2opcode.get('dec').value,
@@ -189,10 +197,7 @@ def parse_extra_action(part_to_parse):
                 }
             }
             res_code.append(result)
-            print(res_code[len(res_code) - 1])
             inc_stack()
-            print(jmp_stack)
-            print('-----------------------------------')
         else:
             result = {
                 'opcode': type2opcode.get(part_to_parse[1]).value,
@@ -202,10 +207,7 @@ def parse_extra_action(part_to_parse):
                 }
             }
             res_code.append(result)
-            print(res_code[len(res_code) - 1])
             inc_stack()
-            print(jmp_stack)
-            print('-----------------------------------')
     return result
 
 
