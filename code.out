@@ -1,1 +1,98 @@
-[{'opcode': 'alloc', 'body': {'name': 'n', 'value': 20}}, {'opcode': 'alloc', 'body': {'name': 'i', 'value': 19}}, {'opcode': 'jle', 'condition': {'left': ['i'], 'right': ['0'], 'jmp_arg': 0}}, {'opcode': '{'}, {'opcode': 'je', 'condition': {'left': {'opcode': <Opcode.DIV: 'div'>, 'body': {'left': 'n', 'right': 'i'}}, 'right': ['0'], 'jmp_arg': 0}}, {'opcode': '{'}, {'opcode': <Opcode.ASSIGN: 'assign'>}, {'opcode': '}'}, {'opcode': 'alternative'}, {'opcode': '{'}, {'opcode': <Opcode.ASSIGN: 'assign'>}, {'opcode': '}'}, {'opcode': 'je', 'condition': {'left': ['i'], 'right': ['1'], 'jmp_arg': 0}}, {'opcode': '{'}, {'opcode': 'print'}, {'opcode': '}'}, {'opcode': '}'}, {'opcode': 'jl', 'condition': {'left': {'opcode': <Opcode.DEC: 'dec'>, 'body': {'name': 'n'}}, 'right': ['sdg'], 'jmp_arg': 0}}, {'opcode': <Opcode.HALT: 'halt'>}]
+[
+    {
+        "opcode": "alloc",
+        "body": {
+            "name": "n",
+            "value": 20
+        }
+    },
+    {
+        "opcode": "alloc",
+        "body": {
+            "name": "i",
+            "value": 19
+        }
+    },
+    {
+        "opcode": "jle",
+        "condition": {
+            "left": [
+                "i"
+            ],
+            "right": [
+                "0"
+            ],
+            "jmp_arg": 0
+        }
+    },
+    {
+        "opcode": "je",
+        "condition": {
+            "left": {
+                "opcode": "div",
+                "body": {
+                    "left": "n",
+                    "right": "i"
+                }
+            },
+            "right": [
+                "0"
+            ],
+            "jmp_arg": 0
+        }
+    },
+    {
+        "opcode": "assign",
+        "body": {
+            "left": "i",
+            "right": {
+                "opcode": "dec",
+                "body": {
+                    "name": "i"
+                }
+            }
+        }
+    },
+    {
+        "opcode": "alternative"
+    },
+    {
+        "opcode": "assign",
+        "body": {
+            "left": "n",
+            "right": {
+                "opcode": "add",
+                "body": {
+                    "left": "n",
+                    "right": "20"
+                }
+            }
+        }
+    },
+    {
+        "opcode": "assign",
+        "body": {
+            "left": "i",
+            "right": "19"
+        }
+    },
+    {
+        "opcode": "je",
+        "condition": {
+            "left": [
+                "i"
+            ],
+            "right": [
+                "1"
+            ],
+            "jmp_arg": 0
+        }
+    },
+    {
+        "opcode": "print",
+        "variable": "n"
+    },
+    {
+        "opcode": "halt"
+    }
+]

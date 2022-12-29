@@ -16,4 +16,3 @@ if (i == 1)
 print(n);
 }
 }
-while (n - 1 >= sdg)
