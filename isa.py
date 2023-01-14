@@ -4,23 +4,29 @@ from collections import namedtuple
 
 
 class Opcode(str, Enum):
-    ALLOC = 'alloc'
+    WR = 'wr'
+    LD = 'ld'
+
     INPUT = 'input'
     PRINT = 'print'
-    JUMP = 'jmp'
-    JLE = 'jle' # jump if less or equals
-    JL = 'jl' # jump if less
-    JGE = 'jge' # jump if greater or equals
-    JG = 'jg' # jump if greater
-    JNE = 'jne' # jump if not equals
-    JE = 'je' # jump if equals
+
+    JLE = 'jle'  # jump if less or equals
+    JL = 'jl'  # jump if less
+    JGE = 'jge'  # jump if greater or equals
+    JG = 'jg'  # jump if greater
+    JNE = 'jne'  # jump if not equals
+    JE = 'je'  # jump if equals
+
     DIV = 'div'
     ADD = 'add'
     SUB = 'sub'
     MUL = 'mul'
+
     INC = 'inc'
     DEC = 'dec'
-    ASSIGN = 'assign'
+    JUMP = 'jmp'
+
+    MOV = 'mov'
     HALT = 'halt'
 
 
@@ -30,7 +36,9 @@ class Term(namedtuple('Term', 'name arg1 arg2')):
 
 def write_code(filename, code):
     with open(filename, "w", encoding='utf-8') as file:
-        file.write(json.dumps(code, indent=4))
+        for i in code:
+            file.write(str(i) + "\n")
+        # file.write(json.dumps(code, indent=4))
 
 
 def read_code(filename):
