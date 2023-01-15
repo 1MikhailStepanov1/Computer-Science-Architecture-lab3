@@ -85,10 +85,7 @@ def translate(filename):
     code = parse(filename)
     i = 0
     for i in range(i, len(code)):
-        print(address_instr_mem)
-        print(jmp_stack)
-        print(code[i])
-        print('----------------')
+
         if re.fullmatch(regex_patterns.get("alloc"), code[i]) is not None:
             last_operation = 'wr'
             res_code.append(parse_alloc_instr(last_operation, code[i]))
@@ -135,36 +132,20 @@ def translate(filename):
             address_instr_mem += 1
 
         elif re.fullmatch(regex_patterns.get('alternative'), code[i]) is not None:
-            last_operation = 'else'
             jmp_stack.append({'com_addr': address_instr_mem, 'arg1': 0, 'type': 'else'})
             add_load_isntr('rx14', 0)
-            res_code.append({'opcode': type2opcode.get('jump').value, "arg1": "rx14"})
+            res_code.append({'opcode': type2opcode.get('jump').value})
             address_instr_mem += 1
-
-        # elif code[i] == '{':
-        #     if last_operation == 'if':
-        #         jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'if', 'value': 1})
-        #     elif last_operation == 'while':
-        #         jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'while', 'value': 1})
-        #     elif last_operation == 'else':
-        #         jmp_stack.append({'opcode_index': len(res_code) - 1, 'type': 'else', 'value': 1})
 
         if code[i] == '}':
             jmp_arg = jmp_stack.pop()
             if jmp_arg['type'] == 'while':
                 add_load_isntr("rx14", jmp_arg["com_addr"]-1)
-                res_code.append({'opcode': type2opcode.get('jump').value, "arg1": "rx14"})
+                res_code.append({'opcode': type2opcode.get('jump').value})
                 address_instr_mem += 1
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
-                print(res_code[jmp_arg["com_addr"]])
-            # elif jmp_arg['type'] == 'if':
-            #     res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value'] + 1
-            #     continue
-            # res_code[jmp_arg['opcode_index']]['jmp_arg'] = jmp_arg['value']
             res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
 
-        # if code[i] not in banned_symbols:
-        #     inc_stack()
     res_code.append({'opcode': Opcode.HALT.value})
     address_instr_mem += 1
     return res_code
@@ -255,7 +236,6 @@ def parse_extra_action(part_to_parse):
             result.update({'arg2': 'rx' + str(load_var(part_to_parse[2]))})
         res_code.append(result)
         address_instr_mem += 1
-        # inc_stack()
     else:
         if part_to_parse[1] == '+':
             result.update({
@@ -264,7 +244,6 @@ def parse_extra_action(part_to_parse):
             })
             res_code.append(result)
             address_instr_mem += 1
-            # inc_stack()
         elif part_to_parse[1] == '-':
             result.update({
                 'opcode': type2opcode.get('dec').value,
@@ -272,7 +251,6 @@ def parse_extra_action(part_to_parse):
             })
             res_code.append(result)
             address_instr_mem += 1
-            # inc_stack()
         else:
             result = {
                 'opcode': type2opcode.get(part_to_parse[1]).value,
@@ -281,7 +259,6 @@ def parse_extra_action(part_to_parse):
             }
             res_code.append(result)
             address_instr_mem += 1
-            # inc_stack()
     if part_to_parse[1] == '/':
         return 'rx12'
     elif part_to_parse[1] == '%':
@@ -340,7 +317,6 @@ def load_var(var_name):
     reg_data = 'rx' + str(reg_counter)
     add_load_isntr(reg_data, 'rx2')
     change_data_reg()
-    # inc_stack()
     return get_prev_data_reg()
 
 
