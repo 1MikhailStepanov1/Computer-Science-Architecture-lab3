@@ -32,13 +32,13 @@ reg_counter = 3
 def change_data_reg():
     global reg_counter
     reg_counter += 1
-    if reg_counter > 11:
+    if reg_counter > 12:
         reg_counter = 3
 
 
 def get_prev_data_reg():
     if reg_counter == 3:
-        return 11
+        return 12
     else:
         return reg_counter - 1
 
@@ -94,7 +94,7 @@ def translate(filename):
         elif re.fullmatch(regex_patterns.get("whileWithExtraActions"), code[i]) is not None:
             last_operation = 'while'
             jmp_stack.append({'com_addr': address_instr_mem, 'arg': 0, 'type': 'while'})
-            add_load_isntr('rx14', 0)
+            add_load_isntr('rx15', 0)
             if re.fullmatch(regex_patterns.get("simpleWhileStatement"), code[i]) is not None:
                 res_code.append(parse_condition(code[i], last_operation))
             else:
@@ -104,7 +104,7 @@ def translate(filename):
         elif re.fullmatch(regex_patterns.get("ifWithExtraActions"), code[i]) is not None:
             last_operation = 'if'
             jmp_stack.append({'com_addr': address_instr_mem, 'arg': 0, 'type': 'if'})
-            add_load_isntr('rx14', 0)
+            add_load_isntr('rx15', 0)
             if re.fullmatch(regex_patterns.get("simpleIfStatement"), code[i]) is not None:
                 res_code.append(parse_condition(code[i], last_operation))
             else:
@@ -133,14 +133,14 @@ def translate(filename):
 
         elif re.fullmatch(regex_patterns.get('alternative'), code[i]) is not None:
             jmp_stack.append({'com_addr': address_instr_mem, 'arg1': 0, 'type': 'else'})
-            add_load_isntr('rx14', 0)
+            add_load_isntr('rx15', 0)
             res_code.append({'opcode': type2opcode.get('jump').value})
             address_instr_mem += 1
 
         if code[i] == '}':
             jmp_arg = jmp_stack.pop()
             if jmp_arg['type'] == 'while':
-                add_load_isntr("rx14", jmp_arg["com_addr"]-1)
+                add_load_isntr("rx15", jmp_arg["com_addr"]-1)
                 res_code.append({'opcode': type2opcode.get('jump').value})
                 address_instr_mem += 1
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
@@ -157,8 +157,7 @@ def parse_alloc_instr(operation, row):
     add_load_isntr(reg_name, int(row[len(row) - 1].replace(";", "")))
     result = {
         'opcode': type2opcode.get(operation).value,
-        'arg1': 'rx2',
-        'arg2': reg_name
+        'arg1': reg_name
     }
     add_var_to_map(row[1])
     change_data_reg()
@@ -170,7 +169,6 @@ def parse_condition(row, parsed_type):
         'opcode': 0,
         'arg1': 0,
         'arg2': 0,
-        'arg3': 'rx14'
     }
     row = row.replace('(', '').replace(')', '').split(' ')
     if parsed_type == 'if':
@@ -187,8 +185,6 @@ def parse_condition(row, parsed_type):
             right = row[i + 1:]
     if len(left) > 1:
         result.update({'arg1': parse_extra_action(left)})
-    elif len(right) > 1:
-        result.update({'arg2': parse_extra_action(right)})
     else:
         if left[0] in var2address.keys():
             reg = 'rx' + str(load_var(left[0]))
@@ -196,16 +192,20 @@ def parse_condition(row, parsed_type):
         elif left[0] == '0':
             result.update({'arg1': 'rx0'})
         elif check_number_in_arg(left[0]):
-            add_load_isntr("rx" + str(reg_counter), left[0])
+            add_load_isntr("rx" + str(reg_counter), int(left[0]))
             result.update({'arg1': "rx" + str(reg_counter)})
             change_data_reg()
+
+    if len(right) > 1:
+        result.update({'arg2': parse_extra_action(right)})
+    else:
         if right[0] in var2address.keys():
             reg = 'rx' + str(load_var(right[0]))
             result.update({'arg2': reg})
         elif right[0] == '0':
             result.update({'arg2': 'rx0'})
         elif check_number_in_arg(right[0]):
-            add_load_isntr("rx" + str(reg_counter), right[0])
+            add_load_isntr("rx" + str(reg_counter), int(right[0]))
             result.update({'arg2': "rx" + str(reg_counter)})
             change_data_reg()
 
@@ -260,9 +260,9 @@ def parse_extra_action(part_to_parse):
             res_code.append(result)
             address_instr_mem += 1
     if part_to_parse[1] == '/':
-        return 'rx12'
-    elif part_to_parse[1] == '%':
         return 'rx13'
+    elif part_to_parse[1] == '%':
+        return 'rx14'
     else:
         return result.get('arg1')
 
@@ -283,18 +283,15 @@ def parse_assign_condition(operation, row):
             add_load_isntr('rx' + str(reg_counter), row[2])
             change_data_reg()
             result.update({
-                'arg1': 'rx2',
-                'arg2': 'rx' + str(get_prev_data_reg())
+                'arg1': 'rx' + str(get_prev_data_reg())
             })
         else:
             result.update({
-                'arg1': 'rx2',
-                'arg2': 'rx' + str(load_var(row[2]))
+                'arg1': 'rx' + str(load_var(row[2]))
             })
     else:
         result.update({
-            'arg1': 'rx2',
-            'arg2': parse_extra_action(row[2:])
+            'arg1': parse_extra_action(row[2:])
         })
     add_load_isntr('rx2', var2address.get(row[0]))
     return result
