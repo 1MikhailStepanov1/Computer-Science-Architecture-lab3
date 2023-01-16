@@ -1,30 +1,15 @@
 import logging
 import sys
-from isa import read_code
+from isa import Opcode, read_code
 
 
-class DataMemory:
-    def __init__(self, size):
-        self.data = [None] * size
-
-
-class InstructionMemory:
-    def __init__(self, size):
-        self.instructions = [None] * size
-
-
-class ALU:
-    def __init__(self):
-        self.afsaf = 000
-
-
-class ControlUnit:
-    def __init__(self, program, data_memory, instruction_memory, alu):
-        self.program = program
-        self.data_memory = data_memory
-        self.instruction_memory = instruction_memory
-        self.alu = alu
-        self._tick = 0
+class DataPath:
+    def __init__(self, data_mem_size, instr_mem_size):
+        self.data_mem = [None] * data_mem_size
+        self.instr_mem = [None] * instr_mem_size
+        self.zero_flag = False
+        self.neg_flag = False
+        # TODO Увеличить количество регистров данных на 1
         self.registers = {
             'rx0': 0x0,  # Регистр, постоянно хранящий 0
             'rx1': 0x0,  # Регистр текущей инструкции
@@ -41,8 +26,39 @@ class ControlUnit:
             'rx12': 0,  # /
             'rx13': 0,  # %
             'rx14': 0,  # jmp_arg
-            'rflags': 0
+            'rx15': 0
         }
+
+
+class ALU:
+    def __init__(self, data_path):
+        self.data_path = data_path
+
+    def inc(self, left):
+        return left + 1
+
+    def dec(self, right):
+        return right + 1
+
+    def add(self, left, right):
+        return left + right
+
+    def sub(self, left, right):
+        return left - right
+
+    def mul(self, left, right):
+        return left * right
+
+    def div(self, left, right):
+        return left / right, left % right
+
+
+class ControlUnit:
+    def __init__(self, program, data_path, alu):
+        self.program = program
+        self.data_path = data_path
+        self.alu = alu
+        self._tick = 0
 
     def tick(self):
         self._tick += 1
@@ -50,26 +66,108 @@ class ControlUnit:
     def get_current_tick(self):
         return self._tick
 
-    def decode_instruction(self):
-        print("Privet")
+    def load_program(self):
+        for i in range(0, len(self.program)):
+            self.data_path.instr_mem[i] = self.program[i]
 
-    def execute_instruction(self, dec_instr):
-        print(dec_instr)
+    def decode_and_execute_instruction(self):
+        cur_instr = self.data_path.instr_mem[self.data_path.registers.get("rx1")]
+        print(cur_instr)
+        opcode = cur_instr['opcode']
+
+        if opcode is Opcode.HALT:
+            raise StopIteration()
+
+        if opcode is Opcode.LD:
+            data_to_ld = 0
+            if cur_instr['arg2'] == "rx2":
+                data_to_ld = self.data_path.data_mem[self.data_path.registers.get("rx2")]
+            else:
+                data_to_ld = cur_instr['arg2']
+            self.tick()
+
+            self.data_path.registers.update({cur_instr['arg1']: data_to_ld})
+            self.tick()
+
+        # TODO Убрать первый аргумент у WR
+        if opcode is Opcode.WR:
+            addr_data_mem_to_wr = self.data_path.registers.get("rx2")
+            self.tick()
+
+            self.data_path.data_mem[addr_data_mem_to_wr] = self.data_path.registers.get(cur_instr['arg2'])
+            self.tick()
+
+            self.data_path.registers.update({"rx2": addr_data_mem_to_wr+1})
+            self.tick()
+
+        if opcode is Opcode.JUMP:
+            self.data_path.registers.update({"rx1": self.data_path.registers.get("rx14")})
+            self.tick()
+
+        if opcode in {Opcode.INC, Opcode.DEC, Opcode.ADD, Opcode.SUB, Opcode.MUL}:
+            res_reg = cur_instr['arg1']
+            res = 0
+            if opcode is Opcode.INC:
+                res = self.alu.inc(self.data_path.registers.get(res_reg))
+            if opcode is Opcode.DEC:
+                res = self.alu.dec(self.data_path.registers.get(res_reg))
+            if opcode is Opcode.ADD:
+                res = self.alu.add(self.data_path.registers.get(res_reg),
+                                   self.data_path.registers.get(cur_instr['arg2']))
+            if opcode is Opcode.SUB:
+                res = self.alu.sub(self.data_path.registers.get(res_reg),
+                                   self.data_path.registers.get(cur_instr['arg2']))
+            if opcode is Opcode.MUL:
+                res = self.alu.mul(self.data_path.registers.get(res_reg),
+                                   self.data_path.registers.get(cur_instr['arg2']))
+            self.tick()
+
+            self.data_path.registers.update({res_reg: res})
+            self.tick()
+
+        self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
+        self.tick()
+
+    def __repr__(self):
+        return "{{TICK: {}, RX1: {}, RX2: {}, RX3: {}, RX4: {}, RX5: {}, RX6: {}, RX7: {}, RX8: {}, RX9: {}, " \
+               "RX10: {}, RX11: {}, RX12: {}, RX13: {}, RX14: {}, RX15: {}}}".format(
+            self._tick,
+            self.data_path.registers.get("rx1"),
+            self.data_path.registers.get("rx2"),
+            self.data_path.registers.get("rx3"),
+            self.data_path.registers.get("rx4"),
+            self.data_path.registers.get("rx5"),
+            self.data_path.registers.get("rx6"),
+            self.data_path.registers.get("rx7"),
+            self.data_path.registers.get("rx8"),
+            self.data_path.registers.get("rx9"),
+            self.data_path.registers.get("rx10"),
+            self.data_path.registers.get("rx11"),
+            self.data_path.registers.get("rx12"),
+            self.data_path.registers.get("rx13"),
+            self.data_path.registers.get("rx14"),
+            self.data_path.registers.get("rx15"),
+        )
 
 
-def simulation(code, input_token, limit):
-    data_memory = DataMemory(2048)
-    instruction_memory = InstructionMemory(limit)
-    alu = ALU()
-    control_unit = ControlUnit(code, data_memory, instruction_memory, alu)
+def simulation(code, input_token, instr_limit, iter_limit):
+    data_path = DataPath(2048, instr_limit)
+    alu = ALU(data_path)
+    control_unit = ControlUnit(code, data_path, alu)
     instr_counter = 0
     try:
-        for instr in code:
-            dec_instr = control_unit.decode_instruction()
-
+        control_unit.load_program()
     except IndexError:
         logging.error("Too many instructions. Please, increase size of instruction memory.")
-    except StopIteration():
+
+    try:
+        while True:
+            assert iter_limit > instr_counter, "Too many iterations. " \
+                                               "Please, increase iteration limit or correct your program."
+            control_unit.decode_and_execute_instruction()
+            instr_counter += 1
+            logging.debug("%s", control_unit)
+    except StopIteration:
         pass
     return '', control_unit.get_current_tick()
 
@@ -83,7 +181,8 @@ def main(args):
     elif len(args) == 3:
         prog_type, code_file, input_file = args
 
-    if input_file is not "":
+    input_token = ""
+    if input_file != "":
         with open(input_file, encoding="utf-8") as file:
             input_text = file.read()
             input_token = []
@@ -91,7 +190,7 @@ def main(args):
                 input_token.append(ch)
 
     code = read_code(code_file)
-    output, ticks = simulation(code, input_token, limit=1000)
+    output, ticks = simulation(code, input_token, instr_limit=2048, iter_limit=1000)
 
 
 if __name__ == '__main__':
