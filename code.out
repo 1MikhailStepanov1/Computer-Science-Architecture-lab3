@@ -2,7 +2,7 @@
     {
         "opcode": "ld",
         "arg1": "rx3",
-        "arg2": 20
+        "arg2": 6815845
     },
     {
         "opcode": "wr",
@@ -11,7 +11,7 @@
     {
         "opcode": "ld",
         "arg1": "rx4",
-        "arg2": 19
+        "arg2": 7077996
     },
     {
         "opcode": "wr",
@@ -19,89 +19,39 @@
     },
     {
         "opcode": "ld",
-        "arg1": "rx15",
-        "arg2": 41
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 1
-    },
-    {
-        "opcode": "ld",
         "arg1": "rx5",
-        "arg2": "rx2"
+        "arg2": 7274540
     },
     {
-        "opcode": "jle",
-        "arg1": "rx5",
-        "arg2": "rx0"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx15",
-        "arg2": 20
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 0
+        "opcode": "wr",
+        "arg1": "rx5"
     },
     {
         "opcode": "ld",
         "arg1": "rx6",
-        "arg2": "rx2"
+        "arg2": 2097271
     },
     {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 1
+        "opcode": "wr",
+        "arg1": "rx6"
     },
     {
         "opcode": "ld",
         "arg1": "rx7",
-        "arg2": "rx2"
+        "arg2": 7274610
     },
     {
-        "opcode": "div",
-        "arg1": "rx6",
-        "arg2": "rx7"
-    },
-    {
-        "opcode": "jne",
-        "arg1": "rx14",
-        "arg2": "rx0"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 1
+        "opcode": "wr",
+        "arg1": "rx7"
     },
     {
         "opcode": "ld",
         "arg1": "rx8",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "dec",
-        "arg1": "rx8"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 1
+        "arg2": 7077988
     },
     {
         "opcode": "wr",
         "arg1": "rx8"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx15",
-        "arg2": 31
-    },
-    {
-        "opcode": "jmp"
     },
     {
         "opcode": "ld",
@@ -114,47 +64,41 @@
         "arg2": "rx2"
     },
     {
-        "opcode": "ld",
-        "arg1": "rx10",
-        "arg2": "20"
-    },
-    {
-        "opcode": "add",
-        "arg1": "rx9",
-        "arg2": "rx10"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 0
-    },
-    {
-        "opcode": "wr",
+        "opcode": "print",
         "arg1": "rx9"
     },
     {
         "opcode": "ld",
-        "arg1": "rx11",
-        "arg2": "19"
-    },
-    {
-        "opcode": "ld",
         "arg1": "rx2",
         "arg2": 1
     },
     {
-        "opcode": "wr",
+        "opcode": "ld",
+        "arg1": "rx10",
+        "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
+        "arg1": "rx10"
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx2",
+        "arg2": 2
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx11",
+        "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
         "arg1": "rx11"
     },
     {
         "opcode": "ld",
-        "arg1": "rx15",
-        "arg2": 39
-    },
-    {
-        "opcode": "ld",
         "arg1": "rx2",
-        "arg2": 1
+        "arg2": 3
     },
     {
         "opcode": "ld",
@@ -162,19 +106,27 @@
         "arg2": "rx2"
     },
     {
-        "opcode": "ld",
-        "arg1": "rx3",
-        "arg2": 1
-    },
-    {
-        "opcode": "jne",
-        "arg1": "rx12",
-        "arg2": "rx3"
+        "opcode": "print",
+        "arg1": "rx12"
     },
     {
         "opcode": "ld",
         "arg1": "rx2",
-        "arg2": 0
+        "arg2": 4
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx3",
+        "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
+        "arg1": "rx3"
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx2",
+        "arg2": 5
     },
     {
         "opcode": "ld",
@@ -184,14 +136,6 @@
     {
         "opcode": "print",
         "arg1": "rx4"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx15",
-        "arg2": 3
-    },
-    {
-        "opcode": "jmp"
     },
     {
         "opcode": "halt"
