@@ -2,56 +2,34 @@
     {
         "opcode": "ld",
         "arg1": "rx3",
-        "arg2": 6815845
+        "arg2": 0
     },
     {
         "opcode": "wr",
         "arg1": "rx3"
     },
     {
+        "opcode": "input"
+    },
+    {
         "opcode": "ld",
+        "arg1": "rx15",
+        "arg2": 0
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx2",
+        "arg2": 13
+    },
+    {
+        "opcode": "ld",
+        "arg1": "rx4",
+        "arg2": "rx2"
+    },
+    {
+        "opcode": "je",
         "arg1": "rx4",
-        "arg2": 7077996
-    },
-    {
-        "opcode": "wr",
-        "arg1": "rx4"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx5",
-        "arg2": 7274540
-    },
-    {
-        "opcode": "wr",
-        "arg1": "rx5"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx6",
-        "arg2": 2097271
-    },
-    {
-        "opcode": "wr",
-        "arg1": "rx6"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx7",
-        "arg2": 7274610
-    },
-    {
-        "opcode": "wr",
-        "arg1": "rx7"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx8",
-        "arg2": 7077988
-    },
-    {
-        "opcode": "wr",
-        "arg1": "rx8"
+        "arg2": "EOF"
     },
     {
         "opcode": "ld",
@@ -60,82 +38,23 @@
     },
     {
         "opcode": "ld",
-        "arg1": "rx9",
+        "arg1": "rx5",
         "arg2": "rx2"
     },
     {
         "opcode": "print",
-        "arg1": "rx9"
+        "arg1": "rx5"
+    },
+    {
+        "opcode": "input"
     },
     {
         "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 1
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx10",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "print",
-        "arg1": "rx10"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 2
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx11",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "print",
-        "arg1": "rx11"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
+        "arg1": "rx15",
         "arg2": 3
     },
     {
-        "opcode": "ld",
-        "arg1": "rx12",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "print",
-        "arg1": "rx12"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 4
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx3",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "print",
-        "arg1": "rx3"
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx2",
-        "arg2": 5
-    },
-    {
-        "opcode": "ld",
-        "arg1": "rx4",
-        "arg2": "rx2"
-    },
-    {
-        "opcode": "print",
-        "arg1": "rx4"
+        "opcode": "jmp"
     },
     {
         "opcode": "halt"
