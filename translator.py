@@ -85,9 +85,7 @@ def translate(filename):
     i = 0
     for i in range(i, len(code)):
         if re.fullmatch(regex_patterns.get("alloc"), code[i]) is not None:
-            last_operation = 'wr'
             parse_alloc_instr(code[i])
-            address_instr_mem += 1
 
         elif re.fullmatch(regex_patterns.get("whileWithExtraActions"), code[i]) is not None:
             last_operation = 'while'
@@ -104,8 +102,7 @@ def translate(filename):
             address_instr_mem += 1
 
         elif re.fullmatch(regex_patterns.get("assign"), code[i]) is not None:
-            last_operation = 'wr'
-            res_code.append(parse_assign_condition(last_operation, code[i]))
+            res_code.append(parse_assign_condition(code[i]))
             address_instr_mem += 1
 
         elif re.fullmatch(regex_patterns.get("input"), code[i]) is not None:
@@ -114,7 +111,6 @@ def translate(filename):
             address_instr_mem += 1
 
         elif re.fullmatch(regex_patterns.get("print"), code[i]) is not None:
-            last_operation = 'print'
             name_of_variable = code[i].replace('print', '').replace('(', '').replace(')', '').replace(';', '')
             var_out(name_of_variable)
 
@@ -131,7 +127,8 @@ def translate(filename):
                 res_code.append({'opcode': type2opcode.get('jump').value})
                 address_instr_mem += 1
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
-            res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
+            else:
+                res_code[jmp_arg["com_addr"]-1].update({'arg2': address_instr_mem-1})
 
     res_code.append({'opcode': Opcode.HALT.value})
     address_instr_mem += 1
@@ -179,7 +176,7 @@ def parse_alloc_instr(row):
                     data_to_put = 0
     else:
         add_var_to_map(row[1])
-        add_load_instr(reg_name, int(row[len(row) - 1]))
+        add_load_instr(reg_name, int(row[len(row) - 1].replace(";", "")))
         add_wr_instr(reg_name)
         change_data_reg()
 
@@ -207,11 +204,8 @@ def parse_condition(row, parsed_type):
         result.update({'arg1': parse_extra_action(left)})
     else:
         if left[0] in vars:
-            for addr in address2var.keys():
-                if address2var.get(addr) == left[0]:
-                    reg = 'rx' + str(load_var(left[0]))
-                    result.update({'arg1': reg})
-                    break
+            reg = 'rx' + str(load_var(get_var_addr_in_mem(left[0])))
+            result.update({'arg1': reg})
         elif left[0] == '0':
             result.update({'arg1': 'rx0'})
         elif check_number_in_arg(left[0]):
@@ -223,11 +217,8 @@ def parse_condition(row, parsed_type):
         result.update({'arg2': parse_extra_action(right)})
     else:
         if right[0] in vars:
-            for addr in address2var.keys():
-                if address2var.get(addr) == right[0]:
-                    reg = 'rx' + str(load_var(right[0]))
-                    result.update({'arg1': reg})
-                    break
+            reg = 'rx' + str(load_var(get_var_addr_in_mem(right[0])))
+            result.update({'arg1': reg})
         elif right[0] == '0':
             result.update({'arg2': 'rx0'})
         elif check_number_in_arg(right[0]):
@@ -255,27 +246,27 @@ def parse_extra_action(part_to_parse):
             change_data_reg()
             result.update({'arg1': 'rx' + str(reg_counter - 1)})
         else:
-            result.update({'arg1': 'rx' + str(load_var(part_to_parse[0]))})
+            result.update({'arg1': 'rx' + str(load_var(get_var_addr_in_mem(part_to_parse[0])))})
         if check_number_in_arg(part_to_parse[2]):
             add_load_instr('rx' + str(reg_counter), part_to_parse[2])
             change_data_reg()
             result.update({'arg2': 'rx' + str(reg_counter - 1)})
         else:
-            result.update({'arg2': 'rx' + str(load_var(part_to_parse[2]))})
+            result.update({'arg2': 'rx' + str(load_var(get_var_addr_in_mem(part_to_parse[2])))})
         res_code.append(result)
         address_instr_mem += 1
     else:
         if part_to_parse[1] == '+':
             result.update({
                 'opcode': type2opcode.get('inc').value,
-                'arg1': 'rx' + str(load_var(part_to_parse[0]))
+                'arg1': 'rx' + str(load_var(get_var_addr_in_mem(part_to_parse[0])))
             })
             res_code.append(result)
             address_instr_mem += 1
         elif part_to_parse[1] == '-':
             result.update({
                 'opcode': type2opcode.get('dec').value,
-                'arg1': 'rx' + str(load_var(part_to_parse[0]))
+                'arg1': 'rx' + str(load_var(get_var_addr_in_mem(part_to_parse[0])))
             })
             res_code.append(result)
             address_instr_mem += 1
@@ -295,9 +286,9 @@ def parse_extra_action(part_to_parse):
         return result.get('arg1')
 
 
-def parse_assign_condition(operation, row):
+def parse_assign_condition(row):
     row = row.replace(';', '').split()
-    result = {'opcode': type2opcode.get(operation).value}
+    result = {'opcode': type2opcode.get('wr').value}
     if len(row) == 3:
         if check_number_in_arg(row[2]):
             add_load_instr('rx' + str(reg_counter), row[2])
@@ -307,21 +298,23 @@ def parse_assign_condition(operation, row):
             })
         else:
             result.update({
-                'arg1': 'rx' + str(load_var(row[2]))
+                'arg1': 'rx' + str(load_var(get_var_addr_in_mem(row[2])))
             })
     else:
         result.update({
             'arg1': parse_extra_action(row[2:])
         })
-    add_load_instr('rx2', address2var.get(row[0]))
+    add_load_instr('rx2', get_var_addr_in_mem(row[0]))
     return result
 
 
 def var_out(var_name):
-    for addr in address2var.keys():
+    global address_instr_mem
+    for addr in address2var:
         if address2var.get(addr) == var_name:
             reg_to_print = load_var(addr)
             res_code.append({'opcode': 'print', 'arg1': 'rx' + str(reg_to_print)})
+            address_instr_mem += 1
 
 
 def load_var(addr):
@@ -358,6 +351,12 @@ def add_var_to_map(name):
     global address_data_mem
     vars.add(name)
     address2var.update({address_data_mem: name})
+
+
+def get_var_addr_in_mem(var):
+    for addr in address2var:
+        if address2var.get(addr) == var:
+            return addr
 
 
 def main():

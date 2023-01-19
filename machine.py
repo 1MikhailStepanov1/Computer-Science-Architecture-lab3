@@ -9,6 +9,7 @@ class DataPath:
         self.instr_mem = [None] * instr_mem_size
         self.zero_flag = False
         self.neg_flag = False
+        self.output_buffer = []
         self.registers = {
             'rx0': 0x0,  # Регистр, постоянно хранящий 0
             'rx1': 0x0,  # Регистр текущей инструкции
@@ -196,7 +197,8 @@ class ControlUnit:
             self.tick()
 
         if opcode is Opcode.PRINT:
-            logging.info("%s", self.data_path.registers.get(cur_instr['arg1']))
+            logging.info("%s", chr(int(self.data_path.registers.get(cur_instr['arg1']) / 65536)))
+            logging.info("%s", chr(self.data_path.registers.get(cur_instr['arg1']) % 65536))
 
         if not jmp_instr:
             self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})

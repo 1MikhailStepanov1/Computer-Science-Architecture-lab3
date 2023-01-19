@@ -1,23 +1,23 @@
 ld rx3, 20          |
-wr rx2, rx3         |       let n = 20;
+wr rx3              |       let n = 20;
 ld rx4, 19          |
-wr rx2, rx4         |       let i = 19;
+wr rx4              |       let i = 19;
 ld rx14, 0x41       |
 ld rx2, 0x1         |
 ld rx5, rx2         |
-jle rx5, rx0, rx14  |       i > 0
-ld rx14, 0x20       |
+jle rx5, rx0        |       i > 0
+ld rx15, 0x20       |
 ld rx2, 0x0
 ld rx6, rx2
 ld rx2, 0x1
 ld rx7, rx2
 div rx6, rx7        |       n % i -> % - x13, / - x12
-jne rx13, rx0, rx14 |       rx13 == 0
+jne rx14, rx0       |       rx13 == 0
 ld rx2, 0x1
 ld rx8, rx2
 dec rx8             |       i - 1
 ld rx2, 0x1         |
-wr rx2, rx8         |       i = i - 1;
+wr rx8              |       i = i - 1;
 ld rx14, 0x31       |
 jmp rx14            |
 ld rx2, 0x0         |
@@ -25,18 +25,18 @@ ld rx9, rx2
 ld rx10, 20         |
 add rx9, rx10       |       n + 20
 ld rx2, 0x0
-wr rx2, rx9         |       n = n + 20;
+wr rx9              |       n = n + 20;
 ld rx11, 19         |
 ld rx2, 0x1
-wr rx2, rx11        |       19 -> i
-ld rx14, 0x39       |
+wr rx11             |       19 -> i
+ld rx15, 0x39       |
 ld rx2, 0x1
 ld rx3, rx2
 ld rx4, 1           |
-jne rx3, rx4, rx14  |       i == 1
+jne rx3, rx4        |       i == 1
 ld rx2, 0x0         |
 ld rx5, rx2         |
 print rx5           |       n -> print
-ld rx14, 0x5        |
-jmp rx14            |
+ld rx15, 0x5        |
+jmp                 |
 halt
