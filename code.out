@@ -2,7 +2,7 @@
     {
         "opcode": "ld",
         "arg1": "rx3",
-        "arg2": 6815845
+        "arg2": 6619240
     },
     {
         "opcode": "wr",
@@ -20,7 +20,7 @@
     {
         "opcode": "ld",
         "arg1": "rx5",
-        "arg2": 7274540
+        "arg2": 2883695
     },
     {
         "opcode": "wr",
@@ -29,7 +29,7 @@
     {
         "opcode": "ld",
         "arg1": "rx6",
-        "arg2": 2097271
+        "arg2": 7798816
     },
     {
         "opcode": "wr",
@@ -38,7 +38,7 @@
     {
         "opcode": "ld",
         "arg1": "rx7",
-        "arg2": 7274610
+        "arg2": 7471215
     },
     {
         "opcode": "wr",
@@ -47,7 +47,7 @@
     {
         "opcode": "ld",
         "arg1": "rx8",
-        "arg2": 7077988
+        "arg2": 6553708
     },
     {
         "opcode": "wr",
@@ -68,6 +68,10 @@
         "arg1": "rx9"
     },
     {
+        "opcode": "print",
+        "arg1": "rx9"
+    },
+    {
         "opcode": "ld",
         "arg1": "rx2",
         "arg2": 1
@@ -76,6 +80,10 @@
         "opcode": "ld",
         "arg1": "rx10",
         "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
+        "arg1": "rx10"
     },
     {
         "opcode": "print",
@@ -96,6 +104,10 @@
         "arg1": "rx11"
     },
     {
+        "opcode": "print",
+        "arg1": "rx11"
+    },
+    {
         "opcode": "ld",
         "arg1": "rx2",
         "arg2": 3
@@ -104,6 +116,10 @@
         "opcode": "ld",
         "arg1": "rx12",
         "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
+        "arg1": "rx12"
     },
     {
         "opcode": "print",
@@ -124,6 +140,10 @@
         "arg1": "rx3"
     },
     {
+        "opcode": "print",
+        "arg1": "rx3"
+    },
+    {
         "opcode": "ld",
         "arg1": "rx2",
         "arg2": 5
@@ -132,6 +152,10 @@
         "opcode": "ld",
         "arg1": "rx4",
         "arg2": "rx2"
+    },
+    {
+        "opcode": "print",
+        "arg1": "rx4"
     },
     {
         "opcode": "print",

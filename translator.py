@@ -25,7 +25,7 @@ type2opcode = {
 
 address_data_mem = 0x0
 address_instr_mem = 0x0
-address2var = {}
+address2var = []
 vars = set()
 reg_counter = 3
 
@@ -82,8 +82,7 @@ def parse(filename):
 def translate(filename):
     global address_instr_mem
     code = parse(filename)
-    i = 0
-    for i in range(i, len(code)):
+    for i in range(0, len(code)):
         if re.fullmatch(regex_patterns.get("alloc"), code[i]) is not None:
             parse_alloc_instr(code[i])
 
@@ -149,7 +148,7 @@ def parse_alloc_instr(row):
         if value[0] == "\"\"":
             add_load_instr('rx' + str(reg_counter), 0)
             change_data_reg()
-            add_var_to_map(row[1])
+            add_var_to_map(row[1], 'string')
             add_wr_instr('rx' + str(get_prev_data_reg()))
             return
         string_to_load = ""
@@ -164,18 +163,19 @@ def parse_alloc_instr(row):
             data_to_put = 0
             for ch in range(0, len(string_to_load)):
                 if ch_in_cell == 1:
-                    data_to_put *= 65536
-                data_to_put += ord(string_to_load[ch])
+                    data_to_put += 65536 * ord(string_to_load[ch])
+                else:
+                    data_to_put += ord(string_to_load[ch])
                 ch_in_cell += 1
                 if ch_in_cell == 2:
                     ch_in_cell = 0
                     add_load_instr('rx' + str(reg_counter), data_to_put)
                     change_data_reg()
-                    add_var_to_map(row[1])
+                    add_var_to_map(row[1], 'string')
                     add_wr_instr('rx' + str(get_prev_data_reg()))
                     data_to_put = 0
     else:
-        add_var_to_map(row[1])
+        add_var_to_map(row[1], 'int')
         add_load_instr(reg_name, int(row[len(row) - 1].replace(";", "")))
         add_wr_instr(reg_name)
         change_data_reg()
@@ -310,9 +310,14 @@ def parse_assign_condition(row):
 
 def var_out(var_name):
     global address_instr_mem
-    for addr in address2var:
-        if address2var.get(addr) == var_name:
-            reg_to_print = load_var(addr)
+    print(address2var)
+    print(var_name)
+    for var in address2var:
+        print(var)
+        if var['name'] == var_name:
+            reg_to_print = load_var(var['addr'])
+            if var['type'] == 'string':
+                res_code.append({'opcode': 'print', 'arg1': 'rx' + str(reg_to_print)})
             res_code.append({'opcode': 'print', 'arg1': 'rx' + str(reg_to_print)})
             address_instr_mem += 1
 
@@ -347,16 +352,21 @@ def add_wr_instr(register):
     address_data_mem += 1
 
 
-def add_var_to_map(name):
+def add_var_to_map(name, var_type):
     global address_data_mem
     vars.add(name)
-    address2var.update({address_data_mem: name})
+    var = {
+        'addr': address_data_mem,
+        'name': name,
+        'type': var_type
+    }
+    address2var.append(var)
 
 
-def get_var_addr_in_mem(var):
-    for addr in address2var:
-        if address2var.get(addr) == var:
-            return addr
+def get_var_addr_in_mem(name):
+    for var in address2var:
+        if var['name'] == name:
+            return var['addr']
 
 
 def main():

@@ -39,6 +39,12 @@ class DataPath:
         self.zero_flag = False
         self.neg_flag = False
 
+    def output(self, reg):
+        symbol = chr(self.registers.get(reg) % 65536)
+        logging.info('output: %s << %s', repr(self.output_buffer), repr(symbol))
+        self.registers.update({reg: int(self.registers.get(reg) / 65536)})
+        self.output_buffer.append(symbol)
+
 
 class ALU:
     def __init__(self, data_path):
@@ -197,8 +203,7 @@ class ControlUnit:
             self.tick()
 
         if opcode is Opcode.PRINT:
-            logging.info("%s", chr(int(self.data_path.registers.get(cur_instr['arg1']) / 65536)))
-            logging.info("%s", chr(self.data_path.registers.get(cur_instr['arg1']) % 65536))
+            self.data_path.output(cur_instr['arg1'])
 
         if not jmp_instr:
             self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
