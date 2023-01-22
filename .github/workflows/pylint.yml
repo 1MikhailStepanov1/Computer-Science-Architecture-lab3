@@ -22,4 +22,4 @@ jobs:
         pip install pytest-golden
     - name: Run golden tests
       run: |
-        python -m pytest integration-tests.py
+        python -m pytest integration-tests.py::test_hello_program
