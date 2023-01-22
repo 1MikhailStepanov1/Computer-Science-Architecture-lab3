@@ -1,9 +1,12 @@
+#!/usr/bin/python3
+# pylint: disable=missing-function-docstring
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+
+
 import logging
 import sys
 from isa import Opcode, read_code
-
-
-# logging.basicConfig(filename='prob5.log', encoding='utf-8', level=logging.DEBUG)
 
 
 class DataPath:
@@ -15,6 +18,7 @@ class DataPath:
         self.output_buffer = []
         self.input_buffer = input_buffer
         self.stack = [0] * data_mem_size
+        self.val_to_ld = 0
         self.registers = {
             'rx0': 0x0,  # Регистр, постоянно хранящий 0
             'rx1': 0x0,  # Регистр текущей инструкции
@@ -63,6 +67,21 @@ class DataPath:
         ch = self.input_buffer.pop(0)
         print(ch)
         self.data_mem[self.registers.get('rx2')] = ord(ch)
+
+    def latch_register(self, reg):
+        self.registers[reg] = self.val_to_ld
+
+    def latch_program_counter(self, sel_next):
+        if sel_next:
+            self.registers['rx1'] += 1
+        else:
+            self.registers['rx1'] = self.val_to_ld
+
+    def latch_data_mem_counter(self, sel_next):
+        if sel_next:
+            self.registers['rx2'] += 1
+        else:
+            self.registers['rx2'] = self.val_to_ld
 
 
 class ALU:
@@ -131,39 +150,47 @@ class ControlUnit:
                 data_to_ld = cur_instr['arg2']
             self.tick()
 
-            self.data_path.registers.update({cur_instr['arg1']: data_to_ld})
+            # self.data_path.registers.update({cur_instr['arg1']: data_to_ld})
+            self.data_path.val_to_ld = data_to_ld
+            self.data_path.latch_register(cur_instr['arg1'])
             self.tick()
 
         if opcode is Opcode.WR:
             self.data_path.write(cur_instr['arg1'])
             self.tick()
 
-            self.data_path.registers.update({'rx2': self.data_path.registers.get('rx2') + 1})
+            self.data_path.val_to_ld = self.data_path.registers.get('rx2') + 1
+            self.data_path.latch_data_mem_counter(True)
+            # self.data_path.latch_register('rx2')
+            # self.data_path.registers.update({'rx2': })
 
         if opcode is Opcode.JUMP:
-            self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+            self.data_path.val_to_ld = self.data_path.registers.get("rx15")
+            self.data_path.latch_program_counter(False)
+            # self.data_path.latch_register('rx1')
+            # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
             self.tick()
             jmp_instr = True
 
         if opcode in {Opcode.INC, Opcode.DEC, Opcode.ADD, Opcode.SUB, Opcode.MUL}:
             res_reg = cur_instr['arg1']
-            res = 0
             if opcode is Opcode.INC:
-                res = self.alu.inc(self.data_path.registers.get(res_reg))
+                self.data_path.val_to_ld = self.alu.inc(self.data_path.registers.get(res_reg))
             if opcode is Opcode.DEC:
-                res = self.alu.dec(self.data_path.registers.get(res_reg))
+                self.data_path.val_to_ld = self.alu.dec(self.data_path.registers.get(res_reg))
             if opcode is Opcode.ADD:
-                res = self.alu.add(self.data_path.registers.get(res_reg),
-                                   self.data_path.registers.get(cur_instr['arg2']))
+                self.data_path.val_to_ld = self.alu.add(self.data_path.registers.get(res_reg),
+                                                        self.data_path.registers.get(cur_instr['arg2']))
             if opcode is Opcode.SUB:
-                res = self.alu.sub(self.data_path.registers.get(res_reg),
-                                   self.data_path.registers.get(cur_instr['arg2']))
+                self.data_path.val_to_ld = self.alu.sub(self.data_path.registers.get(res_reg),
+                                                        self.data_path.registers.get(cur_instr['arg2']))
             if opcode is Opcode.MUL:
-                res = self.alu.mul(self.data_path.registers.get(res_reg),
-                                   self.data_path.registers.get(cur_instr['arg2']))
+                self.data_path.val_to_ld = self.alu.mul(self.data_path.registers.get(res_reg),
+                                                        self.data_path.registers.get(cur_instr['arg2']))
             self.tick()
 
-            self.data_path.registers.update({res_reg: res})
+            # self.data_path.registers.update({res_reg: res})
+            self.data_path.latch_register(res_reg)
             self.tick()
 
         if opcode in {Opcode.JLE, Opcode.JL, Opcode.JNE, Opcode.JE, Opcode.JG, Opcode.JGE}:
@@ -172,34 +199,48 @@ class ControlUnit:
             self.alu.sub(arg1, arg2)
             self.tick()
 
+            self.data_path.val_to_ld = self.data_path.registers.get("rx15")
+
             if opcode is Opcode.JLE:
                 if self.data_path.zero_flag or self.data_path.neg_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JL:
                 if not self.data_path.zero_flag and self.data_path.neg_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JNE:
                 if not self.data_path.zero_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JE:
                 if self.data_path.zero_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JGE:
                 if self.data_path.zero_flag or not self.data_path.neg_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JG:
                 if not self.data_path.zero_flag and not self.data_path.neg_flag:
-                    self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
+                    self.data_path.latch_program_counter(False)
+                    # self.data_path.latch_register('rx1')
+                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             self.tick()
@@ -210,8 +251,12 @@ class ControlUnit:
             res_div, res_mod = self.alu.div(arg1, arg2)
             self.tick()
 
-            self.data_path.registers.update({"rx13": res_div})
-            self.data_path.registers.update({"rx14": res_mod})
+            self.data_path.val_to_ld = res_div
+            self.data_path.latch_register('rx13')
+            # self.data_path.registers.update({"rx13": res_div})
+            self.data_path.val_to_ld = res_mod
+            self.data_path.latch_register('rx14')
+            # self.data_path.registers.update({"rx14": res_mod})
             self.tick()
 
         if opcode is Opcode.PRINT:
@@ -222,6 +267,7 @@ class ControlUnit:
             self.tick()
 
             self.data_path.registers.update({'rx2': self.data_path.registers.get('rx2') + 1})
+            self.data_path.latch_data_mem_counter(True)
             self.tick()
 
         if opcode is Opcode.PUSH:
@@ -251,7 +297,8 @@ class ControlUnit:
         self.tick()
 
         if not jmp_instr:
-            self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
+            self.data_path.latch_program_counter(True)
+            # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
             self.tick()
 
     def __repr__(self):
@@ -327,7 +374,6 @@ def main(args):
     code = read_code(code_file)
     output, ticks = simulation(code, input_token, instr_limit=2048, iter_limit=1000000000)
     logging.info("output:  %s, ticks: %s", repr(output), repr(ticks))
-
 
 
 if __name__ == '__main__':

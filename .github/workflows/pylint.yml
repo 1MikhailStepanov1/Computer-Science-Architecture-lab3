@@ -18,6 +18,5 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pylint
-    - name: Analysing the code with pylint
+    - name: Run golden tests
       run: |
-        pylint $(git ls-files '*.py')

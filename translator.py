@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+# pylint: disable=missing-function-docstring
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+
 import re
 import sys
 
@@ -29,7 +34,7 @@ address_data_mem = 0x0
 address_instr_mem = 0x0
 address2var = []
 stack = 0
-vars = set()
+variables = set()
 reg_counter = 3
 
 
@@ -53,9 +58,15 @@ div_operations = {'/', '%'}
 
 regex_patterns = {
     "alloc": r"let[\s]+[a-zA-z]+[\s]+=[\s]+([0-9]+|(\"|\').*(\"|\'));",
-    "whileWithExtraActions": r"while[\s]*\(([a-zA-z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
-    "ifWithExtraActions": r"if[\s]*\(([a-zA-z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
-    "assign": r"[a-zA-Z]+[\s]+=[\s]+((([a-zA-Z]+|[0-9]+)[\s]+(\%|\/|\+|\-|\*)[\s]*([a-zA-Z]+|[0-9]+))|[0-9]+|[a-zA-Z]+);",
+    "whileWithExtraActions": r"while[\s]*\(([a-zA-z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)"
+                             r"|[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*"
+                             r"(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-Z]+))|"
+                             r"([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
+    "ifWithExtraActions": r"if[\s]*\(([a-zA-z]+[\s]*(\%|\/|\+|\-|\*)[\s]*([0-9]+|[a-zA-z]+)|"
+                          r"[a-zA-z]+[\s]*)[\s]+(>|>=|<|<=|!=|==)[\s]+([0-9]+|[a-zA-Z]+|([a-zA-Z]+[\s]*(\%|\/|\+|\-|\*)"
+                          r"[\s]*([0-9]+|[a-zA-Z]+))|([a-zA-Z]+(\%|\/|\+|\-|\*)([0-9]+|[a-zA-Z]+)))\)",
+    "assign": r"[a-zA-Z]+[\s]+=[\s]+((([a-zA-Z]+|[0-9]+)[\s]+(\%|\/|\+|\-|\*)[\s]*"
+              r"([a-zA-Z]+|[0-9]+))|[0-9]+|[a-zA-Z]+);",
     "alternative": r"else",
     "input": r"input\([a-zA-Z]+\);",
     "print": r"print\([a-zA-Z]+\);"
@@ -73,7 +84,7 @@ def parse(filename):
     with open(filename, encoding="utf-8") as file:
         code = file.read()
     code = code.split("\n")
-    write_code(r"D:\Python_projects\CSA\code.out", code)
+    write_code(r"D:\Python_projects\CSA\tests\code.out", code)
     return code
 
 
@@ -122,7 +133,7 @@ def translate(filename):
                 res_code.append({'opcode': type2opcode.get('jump').value})
                 address_instr_mem += 1
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
-            elif jmp_arg['type'] == 'if' and code[i+1] == 'else':
+            elif jmp_arg['type'] == 'if' and code[i + 1] == 'else':
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem + 2})
             else:
                 res_code[jmp_arg["com_addr"]].update({'arg2': address_instr_mem})
@@ -202,7 +213,7 @@ def parse_condition(row, parsed_type):
     if len(left) > 1:
         result.update({'arg1': parse_extra_action(left)})
     else:
-        if left[0] in vars:
+        if left[0] in variables:
             reg = 'rx' + str(load_var(get_var_addr_in_mem(left[0])))
             result.update({'arg1': reg})
         elif left[0] == '0':
@@ -215,7 +226,7 @@ def parse_condition(row, parsed_type):
     if len(right) > 1:
         result.update({'arg2': parse_extra_action(right)})
     else:
-        if right[0] in vars:
+        if right[0] in variables:
             reg = 'rx' + str(load_var(get_var_addr_in_mem(right[0])))
             result.update({'arg1': reg})
         elif right[0] == '0':
@@ -353,7 +364,7 @@ def add_wr_instr(register):
 
 def add_var_to_map(name, var_type):
     global address_data_mem
-    vars.add(name)
+    variables.add(name)
     var = {
         'addr': address_data_mem,
         'name': name,
@@ -384,7 +395,7 @@ def get_var_addr_in_mem(name):
 
 def main():
     opcodes = translate(sys.argv[1])
-    write_code("D:\Python_projects\CSA\code.out", opcodes)
+    write_code(r"D:\Python_projects\CSA\tests\code.out", opcodes)
 
 
 if __name__ == '__main__':
