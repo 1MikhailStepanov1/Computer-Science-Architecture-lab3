@@ -1,5 +1,5 @@
-let n = 20;
-let i = 19;
+let n = 2520;
+let i = 20;
 while (i > 0)
 {
 if (n % i == 0)
@@ -8,8 +8,8 @@ i = i - 1;
 }
 else
 {
-n = n + 20;
-i = 19;
+n = n + 2520;
+i = 20;
 }
 if (i == 1)
 {

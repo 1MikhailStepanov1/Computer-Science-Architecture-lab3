@@ -3,13 +3,18 @@ import sys
 from isa import Opcode, read_code
 
 
+# logging.basicConfig(filename='prob5.log', encoding='utf-8', level=logging.DEBUG)
+
+
 class DataPath:
-    def __init__(self, data_mem_size, instr_mem_size):
-        self.data_mem = [None] * data_mem_size
+    def __init__(self, data_mem_size, instr_mem_size, input_buffer):
+        self.data_mem = [0] * data_mem_size
         self.instr_mem = [None] * instr_mem_size
         self.zero_flag = False
         self.neg_flag = False
         self.output_buffer = []
+        self.input_buffer = input_buffer
+        self.stack = [0] * data_mem_size
         self.registers = {
             'rx0': 0x0,  # Регистр, постоянно хранящий 0
             'rx1': 0x0,  # Регистр текущей инструкции
@@ -23,7 +28,7 @@ class DataPath:
             'rx9': 0,
             'rx10': 0,
             'rx11': 0,
-            'rx12': 0,
+            'rx12': data_mem_size - 1,  # stack pointer
             'rx13': 0,  # /
             'rx14': 0,  # %
             'rx15': 0  # jmp_arg
@@ -39,11 +44,25 @@ class DataPath:
         self.zero_flag = False
         self.neg_flag = False
 
-    def output(self, reg):
-        symbol = chr(self.registers.get(reg) % 65536)
-        logging.info('output: %s << %s', repr(self.output_buffer), repr(symbol))
-        self.registers.update({reg: int(self.registers.get(reg) / 65536)})
-        self.output_buffer.append(symbol)
+    def output(self, reg, string_mode):
+        ch = 0
+        if string_mode == 1:
+            ch = chr(self.registers.get(reg))
+            print(ch)
+        else:
+            ch = self.registers.get(reg)
+        logging.info('output: %s << %s', repr(self.output_buffer), repr(ch))
+        self.output_buffer.append(ch)
+
+    def write(self, reg):
+        self.data_mem[self.registers.get('rx2')] = self.registers.get(reg)
+
+    def input(self):
+        if len(self.input_buffer) == 0:
+            raise EOFError()
+        ch = self.input_buffer.pop(0)
+        print(ch)
+        self.data_mem[self.registers.get('rx2')] = ord(ch)
 
 
 class ALU:
@@ -51,32 +70,32 @@ class ALU:
         self.data_path = data_path
 
     def inc(self, left):
-        res = left + 1
+        res = int(left) + 1
         self.data_path.set_flags(res)
         return res
 
     def dec(self, right):
-        res = right - 1
+        res = int(right) - 1
         self.data_path.set_flags(res)
         return res
 
     def add(self, left, right):
-        res = left + right
+        res = int(left) + int(right)
         self.data_path.set_flags(res)
         return res
 
     def sub(self, left, right):
-        res = left - right
+        res = int(left) - int(right)
         self.data_path.set_flags(res)
         return res
 
     def mul(self, left, right):
-        res = left * right
+        res = int(left) * int(right)
         self.data_path.set_flags(res)
         return res
 
     def div(self, left, right):
-        return left / right, left % right
+        return int(int(left) / int(right)), int(left) % int(right)
 
 
 class ControlUnit:
@@ -116,14 +135,10 @@ class ControlUnit:
             self.tick()
 
         if opcode is Opcode.WR:
-            addr_data_mem_to_wr = self.data_path.registers.get("rx2")
+            self.data_path.write(cur_instr['arg1'])
             self.tick()
 
-            self.data_path.data_mem[addr_data_mem_to_wr] = self.data_path.registers.get(cur_instr['arg1'])
-            self.tick()
-
-            self.data_path.registers.update({"rx2": addr_data_mem_to_wr + 1})
-            self.tick()
+            self.data_path.registers.update({'rx2': self.data_path.registers.get('rx2') + 1})
 
         if opcode is Opcode.JUMP:
             self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
@@ -189,12 +204,9 @@ class ControlUnit:
 
             self.tick()
 
-            self.data_path.drop_flags()
-            self.tick()
-
         if opcode is Opcode.DIV:
             arg1 = self.data_path.registers.get(cur_instr['arg1'])
-            arg2 = self.data_path.registers.get(cur_instr['arg1'])
+            arg2 = self.data_path.registers.get(cur_instr['arg2'])
             res_div, res_mod = self.alu.div(arg1, arg2)
             self.tick()
 
@@ -203,7 +215,40 @@ class ControlUnit:
             self.tick()
 
         if opcode is Opcode.PRINT:
-            self.data_path.output(cur_instr['arg1'])
+            self.data_path.output(cur_instr['arg1'], cur_instr['arg2'])
+
+        if opcode is Opcode.INPUT:
+            self.data_path.input()
+            self.tick()
+
+            self.data_path.registers.update({'rx2': self.data_path.registers.get('rx2') + 1})
+            self.tick()
+
+        if opcode is Opcode.PUSH:
+            stack_pointer = self.data_path.registers.get('rx12')
+            self.data_path.stack[stack_pointer] = self.data_path.registers.get(cur_instr['arg1'])
+            self.tick()
+
+            stack_pointer -= 1
+            if stack_pointer < 0:
+                stack_pointer = len(self.data_path.stack) - 1
+
+            self.data_path.registers.update({'rx12': stack_pointer})
+            self.tick()
+
+        if opcode is Opcode.POP:
+            stack_pointer = self.data_path.registers.get('rx12')
+            self.data_path.registers.update({cur_instr['arg1']: self.data_path.stack[stack_pointer]})
+            self.tick()
+            stack_pointer += 1
+            if stack_pointer >= len(self.data_path.stack):
+                stack_pointer = 0
+
+            self.data_path.registers.update({'rx12': stack_pointer})
+            self.tick()
+
+        self.data_path.drop_flags()
+        self.tick()
 
         if not jmp_instr:
             self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
@@ -232,7 +277,7 @@ class ControlUnit:
 
 
 def simulation(code, input_token, instr_limit, iter_limit):
-    data_path = DataPath(2048, instr_limit)
+    data_path = DataPath(2048, instr_limit, input_token)
     alu = ALU(data_path)
     control_unit = ControlUnit(code, data_path, alu)
     instr_counter = 0
@@ -246,11 +291,20 @@ def simulation(code, input_token, instr_limit, iter_limit):
             assert iter_limit > instr_counter, "Too many iterations. " \
                                                "Please, increase iteration limit or correct your program."
             control_unit.decode_and_execute_instruction()
+            # print(instr_counter)
             instr_counter += 1
-            logging.debug("%s", control_unit)
+            logging.debug(repr(control_unit))
+            # logging.debug(control_unit.data_path.data_mem[0:20])
+            # print(repr(control_unit))
+            # print("ZF " + str(control_unit.data_path.zero_flag) + " | NF " + str(control_unit.data_path.neg_flag))
+            # print(control_unit.data_path.data_mem[0:20])
+            # print(control_unit.data_path.data_mem[2030::])
+            # print('------------------------------')
+    except EOFError:
+        logging.info('Input buffer is empty!')
     except StopIteration:
         pass
-    return '', control_unit.get_current_tick()
+    return control_unit.data_path.output_buffer, control_unit.get_current_tick()
 
 
 def main(args):
@@ -271,7 +325,9 @@ def main(args):
                 input_token.append(ch)
 
     code = read_code(code_file)
-    output, ticks = simulation(code, input_token, instr_limit=2048, iter_limit=1000)
+    output, ticks = simulation(code, input_token, instr_limit=2048, iter_limit=1000000000)
+    logging.info("output:  %s, ticks: %s", repr(output), repr(ticks))
+
 
 
 if __name__ == '__main__':
