@@ -84,7 +84,6 @@ def parse(filename):
     with open(filename, encoding="utf-8") as file:
         code = file.read()
     code = code.split("\n")
-    write_code(r"D:\Python_projects\CSA\tests\code.out", code)
     return code
 
 
@@ -393,10 +392,12 @@ def get_var_addr_in_mem(name):
             return var['addr']
 
 
-def main():
-    opcodes = translate(sys.argv[1])
-    write_code(r"D:\Python_projects\CSA\tests\code.out", opcodes)
+def main(args):
+    assert len(args) == 2, "Wrong arguments"
+    source, target = args
+    opcodes = translate(source)
+    write_code(target, opcodes)
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

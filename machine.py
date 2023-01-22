@@ -52,7 +52,6 @@ class DataPath:
         ch = 0
         if string_mode == 1:
             ch = chr(self.registers.get(reg))
-            print(ch)
         else:
             ch = self.registers.get(reg)
         logging.info('output: %s << %s', repr(self.output_buffer), repr(ch))
@@ -65,7 +64,6 @@ class DataPath:
         if len(self.input_buffer) == 0:
             raise EOFError()
         ch = self.input_buffer.pop(0)
-        print(ch)
         self.data_mem[self.registers.get('rx2')] = ord(ch)
 
     def latch_register(self, reg):
@@ -338,30 +336,21 @@ def simulation(code, input_token, instr_limit, iter_limit):
             assert iter_limit > instr_counter, "Too many iterations. " \
                                                "Please, increase iteration limit or correct your program."
             control_unit.decode_and_execute_instruction()
-            # print(instr_counter)
             instr_counter += 1
             logging.debug(repr(control_unit))
-            # logging.debug(control_unit.data_path.data_mem[0:20])
-            # print(repr(control_unit))
-            # print("ZF " + str(control_unit.data_path.zero_flag) + " | NF " + str(control_unit.data_path.neg_flag))
-            # print(control_unit.data_path.data_mem[0:20])
-            # print(control_unit.data_path.data_mem[2030::])
-            # print('------------------------------')
     except EOFError:
         logging.info('Input buffer is empty!')
     except StopIteration:
         pass
-    return control_unit.data_path.output_buffer, control_unit.get_current_tick()
+    return control_unit.data_path.output_buffer, control_unit.get_current_tick(), instr_counter
 
 
 def main(args):
     code_file = ""
     input_file = ""
-    assert len(args) == 2 or len(args) == 3, "Wrong amount of arguments. Please, read instruction carefully."
+    assert len(args) == 2, "Wrong amount of arguments. Please, read instruction carefully."
     if len(args) == 2:
-        prog_type, code_file = args
-    elif len(args) == 3:
-        prog_type, code_file, input_file = args
+        code_file, input_file = args
 
     input_token = ""
     if input_file != "":
@@ -372,8 +361,13 @@ def main(args):
                 input_token.append(ch)
 
     code = read_code(code_file)
-    output, ticks = simulation(code, input_token, instr_limit=2048, iter_limit=1000000000)
+    output, ticks, instr_amount = simulation(code, input_token, instr_limit=2048, iter_limit=1000000000)
     logging.info("output:  %s, ticks: %s", repr(output), repr(ticks))
+    print("Output buffer: {} | ticks: {} | amount_instr: {}".format(
+        ''.join(map(str, output)),
+        repr(ticks),
+        repr(instr_amount))
+    )
 
 
 if __name__ == '__main__':
