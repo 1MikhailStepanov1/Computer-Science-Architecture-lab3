@@ -333,6 +333,7 @@ def simulation(code, input_token, instr_limit, iter_limit):
     except EOFError:
         logging.info('Input buffer is empty!')
     except StopIteration:
+        instr_counter += 1
         pass
     return control_unit.data_path.output_buffer, control_unit.get_current_tick(), instr_counter
 

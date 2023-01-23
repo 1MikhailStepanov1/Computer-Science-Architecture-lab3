@@ -298,4 +298,4 @@ code: |-
   ]
 
 output: |
-  Output buffer: hello, world | ticks: 228 | amount_instr: 60
+  Output buffer: hello, world | ticks: 228 | amount_instr: 61
