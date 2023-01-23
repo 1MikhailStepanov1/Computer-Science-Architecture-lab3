@@ -370,7 +370,7 @@ log: |
   DEBUG    root:machine.py:335 {TICK: 225, RX1: 59, RX2: 11, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 100, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
   INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l'] << 'd'
   DEBUG    root:machine.py:335 {TICK: 228, RX1: 60, RX2: 11, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 100, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
-  INFO     root:machine.py:358 output:  ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'], ticks: 228
+  INFO     root:machine.py:361 output:  ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'], ticks: 228
 
 output: |
   Output buffer: hello, world | ticks: 228 | amount_instr: 61
