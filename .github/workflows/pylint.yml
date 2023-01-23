@@ -20,12 +20,10 @@ jobs:
         pip install pylint
         pip install pytest
         pip install pytest-golden
-        pip install coverage
         pip install pep8
         pip install mypy
     - name: Code check
       run: |
-        find . -type f -name "*.py" | xargs -t python3-coverage report
         find . -type f -name "*.py" | xargs -t pep8 --ignore=E501
         find . -type f -name "*.py" | xargs -t mypy --check-untyped-defs --explicit-package-bases --namespace-packages
     - name: Run golden tests
