@@ -141,15 +141,12 @@ class ControlUnit:
             raise StopIteration()
 
         if opcode is Opcode.LD:
-            data_to_ld = 0
             if cur_instr['arg2'] == "rx2":
-                data_to_ld = self.data_path.data_mem[self.data_path.registers.get("rx2")]
+                self.data_path.val_to_ld = self.data_path.data_mem[self.data_path.registers.get("rx2")]
             else:
-                data_to_ld = cur_instr['arg2']
+                self.data_path.val_to_ld = cur_instr['arg2']
             self.tick()
 
-            # self.data_path.registers.update({cur_instr['arg1']: data_to_ld})
-            self.data_path.val_to_ld = data_to_ld
             self.data_path.latch_register(cur_instr['arg1'])
             self.tick()
 
@@ -157,16 +154,12 @@ class ControlUnit:
             self.data_path.write(cur_instr['arg1'])
             self.tick()
 
-            self.data_path.val_to_ld = self.data_path.registers.get('rx2') + 1
             self.data_path.latch_data_mem_counter(True)
-            # self.data_path.latch_register('rx2')
-            # self.data_path.registers.update({'rx2': })
+            self.tick()
 
         if opcode is Opcode.JUMP:
             self.data_path.val_to_ld = self.data_path.registers.get("rx15")
             self.data_path.latch_program_counter(False)
-            # self.data_path.latch_register('rx1')
-            # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
             self.tick()
             jmp_instr = True
 
@@ -187,7 +180,6 @@ class ControlUnit:
                                                         self.data_path.registers.get(cur_instr['arg2']))
             self.tick()
 
-            # self.data_path.registers.update({res_reg: res})
             self.data_path.latch_register(res_reg)
             self.tick()
 
@@ -202,43 +194,31 @@ class ControlUnit:
             if opcode is Opcode.JLE:
                 if self.data_path.zero_flag or self.data_path.neg_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JL:
                 if not self.data_path.zero_flag and self.data_path.neg_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JNE:
                 if not self.data_path.zero_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JE:
                 if self.data_path.zero_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JGE:
                 if self.data_path.zero_flag or not self.data_path.neg_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             if opcode is Opcode.JG:
                 if not self.data_path.zero_flag and not self.data_path.neg_flag:
                     self.data_path.latch_program_counter(False)
-                    # self.data_path.latch_register('rx1')
-                    # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx15")})
                     jmp_instr = True
 
             self.tick()
@@ -251,20 +231,18 @@ class ControlUnit:
 
             self.data_path.val_to_ld = res_div
             self.data_path.latch_register('rx13')
-            # self.data_path.registers.update({"rx13": res_div})
             self.data_path.val_to_ld = res_mod
             self.data_path.latch_register('rx14')
-            # self.data_path.registers.update({"rx14": res_mod})
             self.tick()
 
         if opcode is Opcode.PRINT:
             self.data_path.output(cur_instr['arg1'], cur_instr['arg2'])
+            self.tick()
 
         if opcode is Opcode.INPUT:
             self.data_path.input()
             self.tick()
 
-            self.data_path.registers.update({'rx2': self.data_path.registers.get('rx2') + 1})
             self.data_path.latch_data_mem_counter(True)
             self.tick()
 
@@ -296,7 +274,6 @@ class ControlUnit:
 
         if not jmp_instr:
             self.data_path.latch_program_counter(True)
-            # self.data_path.registers.update({"rx1": self.data_path.registers.get("rx1") + 1})
             self.tick()
 
     def __repr__(self):
@@ -361,7 +338,7 @@ def main(args):
                 input_token.append(ch)
 
     code = read_code(code_file)
-    output, ticks, instr_amount = simulation(code, input_token, instr_limit=2048, iter_limit=1000000000)
+    output, ticks, instr_amount = simulation(code, input_token, instr_limit=2048, iter_limit=100000000)
     logging.info("output:  %s, ticks: %s", repr(output), repr(ticks))
     print("Output buffer: {} | ticks: {} | amount_instr: {}".format(
         ''.join(map(str, output)),

@@ -220,4 +220,4 @@ code: |-
       }
   ]
 output: |
-  Output buffer: 232792560 | ticks: 19090394 | amount_instr: 5065440
+  Output buffer: 232792560 | ticks: 19378001 | amount_instr: 5065440
