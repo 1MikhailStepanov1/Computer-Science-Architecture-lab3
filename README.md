@@ -123,7 +123,7 @@ print(temp);
 ### Набор инструкций
 | Синтаксис           | Кол-во тактов | Комментарий                                   |
 |:--------------------|:--------------|:----------------------------------------------|
-| `ld` (reg) (int)    | 2             | int -> reg                                    |
+| `ld` (reg) (int)    | 3             | int -> reg                                    |
 | `ld` (reg) rx2      | 3             | data_mem[rx2] -> reg                          |
 | `wr` (reg)          | 3             | reg -> data_mem[rx2]                          |
 | `add` (reg1) (reg2) | 3             | reg1 + reg2 -> reg1                           |
@@ -131,8 +131,8 @@ print(temp);
 | `mul` (reg1) (reg2) | 3             | reg1 * reg2 -> reg1                           |
 | `div` (reg1) (reg2) | 3             | reg1 / reg2 -> rx13<br/>reg1 % reg2 -> rx14   |
 | `input`             | 3             | i_buf -> data_mem[rx2]                        |
-| `print` (reg) (1/0) | 3             | reg -> o_buf<br/>ch(reg) -> o_buf             |
-| `jmp`               | 3             | rx15 -> rx1                                   |
+| `print` (reg) (1/0) | 2             | reg -> o_buf<br/>ch(reg) -> o_buf             |
+| `jmp`               | 1             | rx15 -> rx1                                   |
 | `inc` (reg)         | 3             | reg + 1 -> reg                                |
 | `dec` (reg)         | 3             | reg - 1 -> reg                                |
 | `jle` (reg1) (reg2) | 3             | zero_flag OR neg_flag => rx15 -> rx1          |
