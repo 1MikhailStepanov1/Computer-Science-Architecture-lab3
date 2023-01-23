@@ -20,7 +20,7 @@ jobs:
         pip install pylint
         pip install pytest
         pip install pytest-golden
-        pip install python3-coverage
+        pip install coverage
         pip install pep8
         pip install mypy
     - name: Code check
