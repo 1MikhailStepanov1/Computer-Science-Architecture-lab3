@@ -75,12 +75,15 @@ class DataPath:
         else:
             self.registers['rx1'] = self.val_to_ld
 
+        assert self.registers['rx1'] < len(self.data_mem), "Out of instruction memory: {}".format(self.registers['rx1'])
+
     def latch_data_mem_counter(self, sel_next):
         if sel_next:
             self.registers['rx2'] += 1
         else:
             self.registers['rx2'] = self.val_to_ld
 
+        assert self.registers['rx2'] < len(self.instr_mem), "Out of data memory: {}".format(self.registers['rx2'])
 
 class ALU:
     def __init__(self, data_path):
