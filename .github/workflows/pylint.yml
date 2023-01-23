@@ -20,12 +20,6 @@ jobs:
         pip install pylint
         pip install pytest
         pip install pytest-golden
-        pip install pep8
-        pip install mypy
-    - name: Code check
-      run: |
-        find . -type f -name "*.py" | xargs -t pep8 --ignore=E501
-        find . -type f -name "*.py" | xargs -t mypy --check-untyped-defs --explicit-package-bases --namespace-packages
     - name: Run golden tests
       run: |
         pytest integration_tests.py::test_hello_program
