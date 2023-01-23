@@ -20,6 +20,9 @@ jobs:
         pip install pylint
         pip install pytest
         pip install pytest-golden
+        pip install python3-coverage
+        pip install pep8
+        pip install mypy
     - name: Code check
       run: |
         find . -type f -name "*.py" | xargs -t python3-coverage report
