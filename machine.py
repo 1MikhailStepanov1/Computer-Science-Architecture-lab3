@@ -278,24 +278,39 @@ class ControlUnit:
 
     def __repr__(self):
         return "{{TICK: {}, RX1: {}, RX2: {}, RX3: {}, RX4: {}, RX5: {}, RX6: {}, RX7: {}, RX8: {}, RX9: {}, " \
-               "RX10: {}, RX11: {}, RX12: {}, RX13: {}, RX14: {}, RX15: {}}}".format(
-            self._tick,
-            self.data_path.registers.get("rx1"),
-            self.data_path.registers.get("rx2"),
-            self.data_path.registers.get("rx3"),
-            self.data_path.registers.get("rx4"),
-            self.data_path.registers.get("rx5"),
-            self.data_path.registers.get("rx6"),
-            self.data_path.registers.get("rx7"),
-            self.data_path.registers.get("rx8"),
-            self.data_path.registers.get("rx9"),
-            self.data_path.registers.get("rx10"),
-            self.data_path.registers.get("rx11"),
-            self.data_path.registers.get("rx12"),
-            self.data_path.registers.get("rx13"),
-            self.data_path.registers.get("rx14"),
-            self.data_path.registers.get("rx15"),
-        )
+               "RX10: {}, RX11: {}, RX12: {}, RX13: {}, RX14: {}, RX15: {}}}" \
+            .format(self._tick,
+                    self.data_path.registers.get(
+                        "rx1"),
+                    self.data_path.registers.get(
+                        "rx2"),
+                    self.data_path.registers.get(
+                        "rx3"),
+                    self.data_path.registers.get(
+                        "rx4"),
+                    self.data_path.registers.get(
+                        "rx5"),
+                    self.data_path.registers.get(
+                        "rx6"),
+                    self.data_path.registers.get(
+                        "rx7"),
+                    self.data_path.registers.get(
+                        "rx8"),
+                    self.data_path.registers.get(
+                        "rx9"),
+                    self.data_path.registers.get(
+                        "rx10"),
+                    self.data_path.registers.get(
+                        "rx11"),
+                    self.data_path.registers.get(
+                        "rx12"),
+                    self.data_path.registers.get(
+                        "rx13"),
+                    self.data_path.registers.get(
+                        "rx14"),
+                    self.data_path.registers.get(
+                        "rx15"),
+                    )
 
 
 def simulation(code, input_token, instr_limit, iter_limit):
