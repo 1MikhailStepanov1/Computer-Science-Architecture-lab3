@@ -5,6 +5,7 @@ import contextlib
 import io
 import os
 import tempfile
+import logging
 
 import pytest
 import machine
@@ -12,7 +13,9 @@ import translator
 
 
 @pytest.mark.golden_test("tests/golden/hello.yml")
-def test_hello_program(golden):
+def test_hello_program(golden, caplog):
+    caplog.set_level(logging.DEBUG)
+
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         source = os.path.join(tmp_dir_name, "hello_test.js")
         target = os.path.join(tmp_dir_name, "hello.out")
@@ -29,10 +32,13 @@ def test_hello_program(golden):
 
         assert code == golden.out["code"]
         assert stdout.getvalue() == golden.out["output"]
+        assert caplog.text == golden["log"]
 
 
 @pytest.mark.golden_test("tests/golden/cat.yml")
-def test_cat_program(golden):
+def test_cat_program(golden, caplog):
+    caplog.set_level(logging.DEBUG)
+
     with tempfile.TemporaryDirectory() as tmp_dir_name:
         source = os.path.join(tmp_dir_name, "cat_test.js")
         input_stream = os.path.join(tmp_dir_name, "privet_input.txt")
@@ -53,6 +59,7 @@ def test_cat_program(golden):
 
         assert code == golden.out["code"]
         assert stdout.getvalue() == golden.out["output"]
+        assert caplog.text == golden["log"]
 
 
 @pytest.mark.golden_test("tests/golden/prob5.yml")

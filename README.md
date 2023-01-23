@@ -123,24 +123,25 @@ print(temp);
 ### Набор инструкций
 | Синтаксис           | Кол-во тактов | Комментарий                                   |
 |:--------------------|:--------------|:----------------------------------------------|
-| `ld` (reg) (int)    | 3             | int -> reg                                    |
-| `ld` (reg) rx2      | 3             | data_mem[rx2] -> reg                          |
-| `wr` (reg)          | 3             | reg -> data_mem[rx2]                          |
-| `add` (reg1) (reg2) | 3             | reg1 + reg2 -> reg1                           |
-| `sub` (reg1) (reg2) | 3             | reg1 - reg2 -> reg1                           |
-| `mul` (reg1) (reg2) | 3             | reg1 * reg2 -> reg1                           |
-| `div` (reg1) (reg2) | 3             | reg1 / reg2 -> rx13<br/>reg1 % reg2 -> rx14   |
-| `input`             | 3             | i_buf -> data_mem[rx2]                        |
-| `print` (reg) (1/0) | 2             | reg -> o_buf<br/>ch(reg) -> o_buf             |
-| `jmp`               | 1             | rx15 -> rx1                                   |
-| `inc` (reg)         | 3             | reg + 1 -> reg                                |
-| `dec` (reg)         | 3             | reg - 1 -> reg                                |
-| `jle` (reg1) (reg2) | 3             | zero_flag OR neg_flag => rx15 -> rx1          |
-| `jl` (reg1) (reg2)  | 3             | NOT zero_flag AND neg_flag => rx15 -> rx1     |
-| `jne` (reg1) (reg2) | 3             | NOT zero_flag  => rx15 -> rx1                 |
-| `je` (reg1) (reg2)  | 3             | zero_flag  => rx15 -> rx1                     |
-| `jge` (reg1) (reg2) | 3             | zero_flag OR NOT neg_flag => rx15 -> rx1      |
-| `jg` (reg1) (reg2)  | 3             | NOT zero_flag AND NOT neg_flag => rx15 -> rx1 |
+| `ld` (reg) (int)    | 4             | int -> reg                                    |
+| `ld` (reg) rx2      | 4             | data_mem[rx2] -> reg                          |
+| `wr` (reg)          | 4             | reg -> data_mem[rx2]                          |
+| `add` (reg1) (reg2) | 4             | reg1 + reg2 -> reg1                           |
+| `sub` (reg1) (reg2) | 4             | reg1 - reg2 -> reg1                           |
+| `mul` (reg1) (reg2) | 4             | reg1 * reg2 -> reg1                           |
+| `div` (reg1) (reg2) | 4             | reg1 / reg2 -> rx13<br/>reg1 % reg2 -> rx14   |
+| `input`             | 4             | i_buf -> data_mem[rx2]                        |
+| `print` (reg) (1/0) | 3             | reg -> o_buf<br/>ch(reg) -> o_buf             |
+| `jmp`               | 2             | rx15 -> rx1                                   |
+| `inc` (reg)         | 4             | reg + 1 -> reg                                |
+| `dec` (reg)         | 4             | reg - 1 -> reg                                |
+| `jle` (reg1) (reg2) | 4             | zero_flag OR neg_flag => rx15 -> rx1          |
+| `jl` (reg1) (reg2)  | 4             | NOT zero_flag AND neg_flag => rx15 -> rx1     |
+| `jne` (reg1) (reg2) | 4             | NOT zero_flag  => rx15 -> rx1                 |
+| `je` (reg1) (reg2)  | 4             | zero_flag  => rx15 -> rx1                     |
+| `jge` (reg1) (reg2) | 4             | zero_flag OR NOT neg_flag => rx15 -> rx1      |
+| `jg` (reg1) (reg2)  | 4             | NOT zero_flag AND NOT neg_flag => rx15 -> rx1 |
+| `hlt`               | 1             |                                               |
 
 Устройства ввода/вывода определены как два буфера данных, условно относящиеся к определенному порту
 

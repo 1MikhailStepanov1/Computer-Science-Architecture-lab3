@@ -297,5 +297,80 @@ code: |-
       }
   ]
 
+log: |
+  DEBUG    root:machine.py:332 {TICK: 4, RX1: 1, RX2: 0, RX3: 104, RX4: 0, RX5: 0, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 8, RX1: 2, RX2: 1, RX3: 104, RX4: 0, RX5: 0, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 12, RX1: 3, RX2: 1, RX3: 104, RX4: 101, RX5: 0, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 16, RX1: 4, RX2: 2, RX3: 104, RX4: 101, RX5: 0, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 20, RX1: 5, RX2: 2, RX3: 104, RX4: 101, RX5: 108, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 24, RX1: 6, RX2: 3, RX3: 104, RX4: 101, RX5: 108, RX6: 0, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 28, RX1: 7, RX2: 3, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 32, RX1: 8, RX2: 4, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 0, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 36, RX1: 9, RX2: 4, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 40, RX1: 10, RX2: 5, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 0, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 44, RX1: 11, RX2: 5, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 48, RX1: 12, RX2: 6, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 0, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 52, RX1: 13, RX2: 6, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 56, RX1: 14, RX2: 7, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 0, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 60, RX1: 15, RX2: 7, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 64, RX1: 16, RX2: 8, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 0, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 68, RX1: 17, RX2: 8, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 72, RX1: 18, RX2: 9, RX3: 104, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 76, RX1: 19, RX2: 9, RX3: 114, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 80, RX1: 20, RX2: 10, RX3: 114, RX4: 101, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 84, RX1: 21, RX2: 10, RX3: 114, RX4: 108, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 88, RX1: 22, RX2: 11, RX3: 114, RX4: 108, RX5: 108, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 92, RX1: 23, RX2: 11, RX3: 114, RX4: 108, RX5: 100, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 96, RX1: 24, RX2: 12, RX3: 114, RX4: 108, RX5: 100, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 100, RX1: 25, RX2: 0, RX3: 114, RX4: 108, RX5: 100, RX6: 108, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 104, RX1: 26, RX2: 0, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: [] << 'h'
+  DEBUG    root:machine.py:332 {TICK: 107, RX1: 27, RX2: 0, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 111, RX1: 28, RX2: 1, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 44, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 115, RX1: 29, RX2: 1, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h'] << 'e'
+  DEBUG    root:machine.py:332 {TICK: 118, RX1: 30, RX2: 1, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 122, RX1: 31, RX2: 2, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 119, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 126, RX1: 32, RX2: 2, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e'] << 'l'
+  DEBUG    root:machine.py:332 {TICK: 129, RX1: 33, RX2: 2, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 133, RX1: 34, RX2: 3, RX3: 114, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 137, RX1: 35, RX2: 3, RX3: 108, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l'] << 'l'
+  DEBUG    root:machine.py:332 {TICK: 140, RX1: 36, RX2: 3, RX3: 108, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 144, RX1: 37, RX2: 4, RX3: 108, RX4: 108, RX5: 100, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 148, RX1: 38, RX2: 4, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l'] << 'o'
+  DEBUG    root:machine.py:332 {TICK: 151, RX1: 39, RX2: 4, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 155, RX1: 40, RX2: 5, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 111, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 159, RX1: 41, RX2: 5, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o'] << ','
+  DEBUG    root:machine.py:332 {TICK: 162, RX1: 42, RX2: 5, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 166, RX1: 43, RX2: 6, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 170, RX1: 44, RX2: 6, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ','] << ' '
+  DEBUG    root:machine.py:332 {TICK: 173, RX1: 45, RX2: 6, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 177, RX1: 46, RX2: 7, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 111, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 181, RX1: 47, RX2: 7, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' '] << 'w'
+  DEBUG    root:machine.py:332 {TICK: 184, RX1: 48, RX2: 7, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 188, RX1: 49, RX2: 8, RX3: 108, RX4: 108, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 192, RX1: 50, RX2: 8, RX3: 108, RX4: 111, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w'] << 'o'
+  DEBUG    root:machine.py:332 {TICK: 195, RX1: 51, RX2: 8, RX3: 108, RX4: 111, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 199, RX1: 52, RX2: 9, RX3: 108, RX4: 111, RX5: 111, RX6: 104, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 203, RX1: 53, RX2: 9, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o'] << 'r'
+  DEBUG    root:machine.py:332 {TICK: 206, RX1: 54, RX2: 9, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 210, RX1: 55, RX2: 10, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 101, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 214, RX1: 56, RX2: 10, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r'] << 'l'
+  DEBUG    root:machine.py:332 {TICK: 217, RX1: 57, RX2: 10, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 221, RX1: 58, RX2: 11, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 108, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  DEBUG    root:machine.py:332 {TICK: 225, RX1: 59, RX2: 11, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 100, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:57 output: ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l'] << 'd'
+  DEBUG    root:machine.py:332 {TICK: 228, RX1: 60, RX2: 11, RX3: 108, RX4: 111, RX5: 111, RX6: 114, RX7: 44, RX8: 108, RX9: 32, RX10: 100, RX11: 119, RX12: 2047, RX13: 0, RX14: 0, RX15: 0}
+  INFO     root:machine.py:358 output:  ['h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'], ticks: 228
+
 output: |
   Output buffer: hello, world | ticks: 228 | amount_instr: 61
