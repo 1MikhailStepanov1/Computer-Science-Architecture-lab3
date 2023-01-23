@@ -31,10 +31,6 @@ class Opcode(str, Enum):
     HALT = 'halt'
 
 
-class Term(namedtuple('Term', 'name arg1 arg2')):
-    """Прикол))"""
-
-
 def write_code(filename, code):
     with open(filename, "w", encoding='utf-8') as file:
         # for i in code:
