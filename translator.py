@@ -72,7 +72,7 @@ regex_patterns = {
     "print": r"print\([a-zA-Z]+\);"
 }
 
-# TODO Переделать на нормальное if условие
+
 banned_symbols = {'{', '}'}
 
 res_code = []
@@ -159,7 +159,6 @@ def parse_alloc_instr(row):
         if row[el] == '=':
             value = row[el + 1:]
     value[len(value) - 1] = value[len(value) - 1].replace(";", "")
-    # TODO Обработать случай наличия одной (")
     if value[0][0] == '\"' and value[len(value) - 1][len(value[len(value) - 1]) - 1] == '\"':
         if value[0] == "\"\"":
             add_load_instr('rx' + str(reg_counter), 0)
